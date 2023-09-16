@@ -1,0 +1,107 @@
+### register
+POST http://localhost:3000/user/register
+Content-Type: application/json
+
+{
+    "userName": "123",
+    "password": "123456",
+    "fullName": "Test",       
+    "point": 10
+}
+
+
+###### login
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "userName": "leminhdai2089",
+    "password": "123456"
+}
+
+###### login
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "userName": "admin",
+    "password": "123456"
+}
+
+### show profile
+GET http://localhost:3000/user/profile
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTA1NTNlZjU5ZjAyNGFiNzQzYWEwMDgiLCJpYXQiOjE2OTQ4NDgzMjcsImV4cCI6MTY5NzQ0MDMyN30.DLPU1ilQTwLz1W5CbMDGld3h-d15rHD5q_hAMtGO5Zg
+
+### edit profile
+PUT http://localhost:3000/user/profile
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTAwMjQxZTIwYjQyZjZjZDFjYTI1OTciLCJpYXQiOjE2OTQ1MTI0NjIsImV4cCI6MTY5NzEwNDQ2Mn0.pcWoOIwNKjALR_w_3f9OV1Z6QSp86WJTedZQJn4b5pg
+Content-Type: application/json
+
+{
+    "fullName": "Lê Minh Đạiiiiiii"
+}
+
+### logout
+DELETE http://localhost:3000/user/logout
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTAwMjQxZTIwYjQyZjZjZDFjYTI1OTciLCJpYXQiOjE2OTQ2Njc4MzUsImV4cCI6MTY5NzI1OTgzNX0.sBZ-Y6jpqirdPdxRv71YCGSZPWX3MW2euOnfNnAixSA"
+}
+
+### add payment
+POST http://localhost:3000/user/payment
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTAyN2YyMTkzMDMxMjlkM2Y2ODMyYjQiLCJpYXQiOjE2OTQ2NjM2MzUsImV4cCI6MTY5NzI1NTYzNX0.Er0uPFtWAv_UMy-sIjkoeNCefKzvtab8X2hF0lVI58A
+Content-Type: application/json
+
+{
+   "cardId": "string1",
+   "fullName": "string1",
+   "nameCard": "string1" 
+}
+
+### update payment
+PUT http://localhost:3000/user/payment
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTAyN2YyMTkzMDMxMjlkM2Y2ODMyYjQiLCJpYXQiOjE2OTQ2NjM2MzUsImV4cCI6MTY5NzI1NTYzNX0.Er0uPFtWAv_UMy-sIjkoeNCefKzvtab8X2hF0lVI58A
+Content-Type: application/json
+
+{
+   "cardId": "string",
+   "fullName": "string",
+   "nameCard": "string" 
+}
+
+### add post
+POST http://localhost:3000/admin/post
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTAyNzgxZDg2MzMzNzE0N2M3MzBiYmQiLCJpYXQiOjE2OTQ2NjUyOTMsImV4cCI6MTY5NzI1NzI5M30.08AabKBVPArKxyZWPsXjECSszmWs1q5OmvdiOiQ6Bc0
+Content-Type: application/json
+
+{
+   "title": "string1",
+   "description": "string1"
+}
+
+### show post
+GET http://localhost:3000/admin/post
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTAyNzgxZDg2MzMzNzE0N2M3MzBiYmQiLCJpYXQiOjE2OTQ2NjUyOTMsImV4cCI6MTY5NzI1NzI5M30.08AabKBVPArKxyZWPsXjECSszmWs1q5OmvdiOiQ6Bc0
+
+
+### update post
+PUT http://localhost:3000/admin/post
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTAyNzgxZDg2MzMzNzE0N2M3MzBiYmQiLCJpYXQiOjE2OTQ2NjUyOTMsImV4cCI6MTY5NzI1NzI5M30.08AabKBVPArKxyZWPsXjECSszmWs1q5OmvdiOiQ6Bc0
+Content-Type: application/json
+
+{
+   "postId": "65054854c4d277c299027162",
+   "title": "string1update",
+   "description": "string1update"
+}
+
+### update post
+DELETE  http://localhost:3000/admin/post
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTAyNzgxZDg2MzMzNzE0N2M3MzBiYmQiLCJpYXQiOjE2OTQ2NjUyOTMsImV4cCI6MTY5NzI1NzI5M30.08AabKBVPArKxyZWPsXjECSszmWs1q5OmvdiOiQ6Bc0
+Content-Type: application/json
+
+{
+   "postId": "65054854c4d277c299027162"
+}
