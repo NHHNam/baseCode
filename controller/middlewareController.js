@@ -1,0 +1,32 @@
+const jwt = require("jsonwebtoken");
+
+const middlewareController = {
+
+    verifyToken: (req, res, next) => {
+        const token = req.headers.token;
+        //const token = req.headers.authorization;
+        if (token) {
+            const acccessToken = token.split(" ")[1];
+            jwt.verify(acccessToken, process.env.JWT_ACCESS_KEY, (err, user) => {
+                if (err) {
+                    res.status(403).json("Token is not valid");
+                }
+                req.user = user;
+                next();
+            });
+        } else {
+            res.status(401).json("You're not authenticated ");
+        }
+
+    },
+    verifyTokenAnAdminAuth: (req, res, next) => {
+        middlewareController.verifyToken(req, res, () => {
+            if (req.user.role === ("admin")) {
+                next();
+            } else {
+                res.status(403).json("You're not allowed access");
+            }
+        });
+    },
+};
+module.exports = middlewareController;
