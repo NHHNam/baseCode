@@ -13,5 +13,5 @@ router.put("/:id", middlewareController.verifyTokenAnAdminAuth, postController.u
 router.delete("/:id", middlewareController.verifyTokenAnAdminAuth, postController.deletePost);
 
 //Route add Thumnail
-router.post("/addThumnail/:id", upload.fields([{ name: "img", maxCount: 2 }]), middlewareController.verifyTokenAnAdminAuth, postController.addThumnail);
+router.post("/addThumnail/:id", middlewareController.verifyTokenAnAdminAuth, upload.fields([{ name: "img", maxCount: 2 }]), postController.addThumnail);
 module.exports = router;
