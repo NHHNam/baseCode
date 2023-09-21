@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 
 const middlewareController = {
 
+    //Check User
     verifyToken: (req, res, next) => {
         const token = req.headers.token;
-        //const token = req.headers.authorization;
         if (token) {
             const acccessToken = token.split(" ")[1];
             jwt.verify(acccessToken, process.env.JWT_ACCESS_KEY, (err, user) => {
@@ -19,6 +19,8 @@ const middlewareController = {
         }
 
     },
+
+    //Check Admin
     verifyTokenAnAdminAuth: (req, res, next) => {
         middlewareController.verifyToken(req, res, () => {
             if (req.user.role === ("admin")) {

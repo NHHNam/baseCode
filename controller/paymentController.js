@@ -1,6 +1,8 @@
 const Payment = require("../model/Payment");
 
 const paymentController = {
+
+    //Add payment
     addPayment: async(req, res) => {
         try {
             const newPayment = await new Payment({
@@ -14,6 +16,8 @@ const paymentController = {
             res.status(500).json(err);
         }
     },
+
+    //Update Payment
     upadtePayment: async(req, res) => {
         try {
 

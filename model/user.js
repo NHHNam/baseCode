@@ -30,6 +30,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "user"
     },
-
+    lock: {
+        type: Boolean,
+        default: false
+    },
+    email: {
+        type: String,
+        require: false
+    }
 }, { timestamps: true });
 module.exports = mongoose.model("User", userSchema);

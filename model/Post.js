@@ -16,6 +16,10 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         reuire: true,
         ref: "User"
+    },
+    thumNail: {
+        type: String,
+        default: null
     }
 
 }, { timestamps: true });
