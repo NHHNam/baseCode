@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
 import route from './routes/index.router.js';
@@ -12,6 +13,7 @@ app.use(
         extended: true,
     }),
 );
+app.use(bodyParser.json());
 
 const options = {
     definition: {

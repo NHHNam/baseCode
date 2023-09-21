@@ -1,8 +1,9 @@
 import User from '../models/user.model.js';
 import Payment from '../models/payment.model.js';
-import { signToken } from '../services/jwt.service.js';
+import { signToken, signOtpToken } from '../services/jwt.service.js';
 import client from '../databases/redis.init.js';
 import { verifyToken } from '../middlewares/auth.middleware.js';
+import transporter from '../services/nodemailer.service.js';
 
 class UserController {
     async Register(req, res, next) {
@@ -34,6 +35,11 @@ class UserController {
                     message: 'Invalid username',
                 });
             }
+            if (user.isLock == 1 || user.isLock == true) {
+                return res.status(401).json({
+                    message: 'The user is locked',
+                });
+            }
             const isValidPass = await user.isCheckPassword(password);
             if (!isValidPass) {
                 return res.status(401).json({
@@ -50,6 +56,94 @@ class UserController {
         } catch (error) {
             console.log(error);
             next(error);
+        }
+    }
+
+    async ChangePassword(req, res) {
+        try {
+            const { _id } = req.payload;
+            const user = await User.findById(_id);
+            const { oldPassword, newPassword } = req.body;
+            const isValidPass = await user.isCheckPassword(oldPassword);
+            if (!isValidPass) {
+                return res.status(400).json({
+                    message: 'Old password is not valid',
+                });
+            }
+            user.password = newPassword;
+            await user.save();
+            return res.status(200).json({
+                message: 'Change password successfully',
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async ForgotPassword(req, res) {
+        try {
+            const { email } = req.body;
+            const user = await User.findOne({ email });
+            if (!user) {
+                res.status(400).json({
+                    message: 'The email is not registerd',
+                });
+            }
+            const otpToken = await signOtpToken(email);
+            const min = 100000; // Giá trị nhỏ nhất có 6 chữ số
+            const max = 999999; // Giá trị lớn nhất có 6 chữ số
+            const otp = Math.floor(Math.random() * (max - min + 1)) + min;
+            await client.set(email.toString().concat('_otp'), otp, {
+                EX: 60 * 5,
+            });
+            await transporter.sendMail({
+                from: '"Minh Đại 👻" <louistart0ggy@gmail.com>', // sender address
+                to: email, // list of receivers
+                subject: `OPT lấy lại mật khẩu cho ${email}`, // Subject line
+                text: 'Hello world?', // plain text body
+                html: `<b>Mã otp của bạn là: ${otp}</b>
+                <br>
+                <i>otp chỉ có hiệu lực trong 5 phút</i>
+                `, // html body
+            });
+            res.status(200).json({
+                message: 'Send otp to your email successfully!',
+                otpToken,
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async RecoveryPassword(req, res) {
+        try {
+            const { email } = req.payload;
+            const { otp, newPassword } = req.body;
+            const otpEmail = parseInt(await client.get(email.concat('_otp').toString()));
+            if (!otpEmail) {
+                return res.status(400).json({
+                    message: 'OTP expired',
+                });
+            }
+            if (otp != otpEmail) {
+                return res.status(400).json({
+                    message: 'Invalid OTP',
+                });
+            }
+            const user = await User.findOne({ email });
+            if (!user) {
+                return res.status(400).json({
+                    message: 'User is not found',
+                });
+            }
+            user.password = newPassword;
+            await user.save();
+            await client.del(email.concat('_otp').toString());
+            return res.status(200).json({
+                message: 'Recover password successfully!',
+            });
+        } catch (error) {
+            throw error;
         }
     }
 

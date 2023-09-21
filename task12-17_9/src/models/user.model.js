@@ -6,9 +6,11 @@ const UserSchema = new Schema(
         userName: { type: String, require: true, unique: true },
         payment: { type: String, unique: true, ref: 'payment', default: null },
         password: { type: String, require: true },
+        email: { type: String, require: true, unique: true },
         fullName: { type: String, require: true },
         point: { type: Number, require: true },
         role: { type: String, require: true, default: 'user' },
+        isLock: { type: Boolean, require: true, default: 0 },
     },
     {
         timestamps: true,

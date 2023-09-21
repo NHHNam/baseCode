@@ -1,8 +1,16 @@
 /**
+ * tags:
+  - name: user
+    description: Everything about your Pets
+ */
+
+/**
  * @swagger
  * /user/register:
  *  post:
  *      description: responses
+ *      tags:
+ *      - user
  *      parameters:
  *      - in: body
  *        name: user
@@ -10,6 +18,8 @@
  *           type: object
  *           properties:
  *             userName:
+ *               type: string
+ *             email:
  *               type: string
  *             password:
  *               type: string
@@ -27,6 +37,8 @@
  * /user/login:
  *  post:
  *      description: responses
+ *      tags:
+ *      - user
  *      parameters:
  *      - in: body
  *        name: user
@@ -47,6 +59,8 @@
  * /user/profile:
  *  get:
  *      description: responses
+ *      tags:
+ *      - user
  *      parameters:
  *      - in: header
  *        name: Authorization
@@ -63,6 +77,8 @@
  * /user/profile:
  *  put:
  *      description: responses
+ *      tags:
+ *      - user
  *      parameters:
  *      - in: header
  *        name: Authorization
@@ -88,6 +104,8 @@
  * /user/logout:
  *  delete:
  *      description: responses
+ *      tags:
+ *      - user
  *      parameters:
  *      - in: body
  *        name: user
@@ -106,6 +124,8 @@
  * /user/payment:
  *  post:
  *      description: responses
+ *      tags:
+ *      - user
  *      parameters:
  *      - in: header
  *        name: Authorization
@@ -133,6 +153,8 @@
  * /user/payment:
  *  put:
  *      description: responses
+ *      tags:
+ *      - user
  *      parameters:
  *      - in: header
  *        name: Authorization
@@ -160,12 +182,18 @@
  * /admin/post:
  *  post:
  *      description: responses
+ *      tags:
+ *      - admin
  *      parameters:
  *      - in: header
  *        name: Authorization
  *        type: string
  *        required: true
  *        description: token for authentication
+ *      - in: formData
+ *        name: fileUpload
+ *        type: file
+ *        description: The file to upload
  *      - in: body
  *        name: admin
  *        schema:
@@ -185,6 +213,8 @@
  * /admin/post:
  *  get:
  *      description: responses
+ *      tags:
+ *      - admin
  *      parameters:
  *      - in: header
  *        name: Authorization
@@ -201,6 +231,8 @@
  * /admin/post:
  *  put:
  *      description: responses
+ *      tags:
+ *      - admin
  *      parameters:
  *      - in: header
  *        name: Authorization
@@ -228,6 +260,8 @@
  * /admin/post:
  *  delete:
  *      description: responses
+ *      tags:
+ *      - admin
  *      parameters:
  *      - in: header
  *        name: Authorization
@@ -240,6 +274,153 @@
  *           type: object
  *           properties:
  *             postId:
+ *               type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /user/change-password:
+ *  patch:
+ *      description: responses
+ *      tags:
+ *      - user private
+ *      parameters:
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *        description: token for authentication
+ *      - in: body
+ *        required: true
+ *        name: user
+ *        schema:
+ *           type: object
+ *           properties:
+ *             oldPassword:
+ *               type: string
+ *             newPassword:
+ *               type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /user/forgot-password:
+ *  post:
+ *      description: responses
+ *      tags:
+ *      - user private
+ *      parameters:
+ *      - in: body
+ *        required: true
+ *        name: user
+ *        schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /user/recovery-password:
+ *  patch:
+ *      description: responses
+ *      tags:
+ *      - user private
+ *      parameters:
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *        description: otp token for authentication
+ *      - in: body
+ *        required: true
+ *        name: user
+ *        schema:
+ *           type: object
+ *           properties:
+ *             otp:
+ *               type: number
+ *             newPassword:
+ *               type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /admin/user-list:
+ *  get:
+ *      description: responses
+ *      tags:
+ *      - admin
+ *      parameters:
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *        description: token for authentication
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /admin/lock-user:
+ *  patch:
+ *      description: responses
+ *      tags:
+ *      - admin
+ *      parameters:
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *        description: token for authentication
+ *      - in: body
+ *        required: true
+ *        name: admin
+ *        schema:
+ *           type: object
+ *           properties:
+ *             userId:
+ *               type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /admin/refresh-password:
+ *  patch:
+ *      description: responses
+ *      tags:
+ *      - admin
+ *      parameters:
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *        description: token for authentication
+ *      - in: body
+ *        required: true
+ *        name: admin
+ *        schema:
+ *           type: object
+ *           properties:
+ *             userId:
  *               type: string
  *      responses:
  *          200:

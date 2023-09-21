@@ -78,3 +78,21 @@ export const verifyUser = (req, res, next) => {
         next();
     });
 };
+
+export const verifyOtp = (req, res, next) => {
+    const token = req.headers['authorization'];
+    if (!token) {
+        return res.status(401).json({
+            message: 'Unauthorized',
+        });
+    }
+    JWT.verify(token, process.env.KEY_SECRET_TOKEN, async (err, payload) => {
+        if (err) {
+            return res.status(401).json({
+                error: err.message,
+            });
+        }
+        req.payload = payload;
+        next();
+    });
+};

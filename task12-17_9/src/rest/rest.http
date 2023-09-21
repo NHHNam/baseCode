@@ -105,3 +105,7 @@ Content-Type: application/json
 {
    "postId": "65054854c4d277c299027162"
 }
+
+###
+POST http://localhost:3000/admin/test
+
