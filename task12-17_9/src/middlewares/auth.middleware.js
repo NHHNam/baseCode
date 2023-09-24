@@ -33,7 +33,20 @@ export const verifyAdmin = (req, res, next) => {
     });
 };
 
-export const verifyToken = (token) => {
+export const verifyAccessToken = (token) => {
+    const keySecret = process.env.KEY_SECRET_TOKEN;
+
+    return new Promise((resolve, reject) => {
+        JWT.verify(token, keySecret, (err, payload) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(payload);
+        });
+    });
+};
+
+export const verifyRefreshToken = (token) => {
     const keySecret = process.env.KEY_SECRET_TOKEN;
 
     return new Promise((resolve, reject) => {

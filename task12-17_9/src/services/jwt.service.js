@@ -1,13 +1,32 @@
 import JWT from 'jsonwebtoken';
 
-export const signToken = (_id) => {
+export const signAccessToken = (_id) => {
     return new Promise((resolve, reject) => {
         const payload = {
             _id,
         };
         const keySecret = process.env.KEY_SECRET_TOKEN;
         const options = {
-            expiresIn: 30 * 24 * 60 * 60, //1 month
+            expiresIn: '2d', //1 month
+        };
+        JWT.sign(payload, keySecret, options, (err, token) => {
+            if (err) {
+                console.log(`err: ${err}`);
+                reject(err);
+            }
+            resolve(token);
+        });
+    });
+};
+
+export const signRefreshToken = (_id) => {
+    return new Promise((resolve, reject) => {
+        const payload = {
+            _id,
+        };
+        const keySecret = process.env.KEY_SECRET_TOKEN;
+        const options = {
+            expiresIn: '7d', //1 month
         };
         JWT.sign(payload, keySecret, options, (err, token) => {
             if (err) {

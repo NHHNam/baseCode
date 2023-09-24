@@ -1,8 +1,9 @@
+import createError from 'http-errors';
 import User from '../models/user.model.js';
 import Payment from '../models/payment.model.js';
-import { signToken, signOtpToken } from '../services/jwt.service.js';
+import { signAccessToken, signOtpToken, signRefreshToken } from '../services/jwt.service.js';
 import client from '../databases/redis.init.js';
-import { verifyToken } from '../middlewares/auth.middleware.js';
+import { verifyAccessToken, verifyRefreshToken } from '../middlewares/auth.middleware.js';
 import transporter from '../services/nodemailer.service.js';
 
 class UserController {
@@ -46,13 +47,14 @@ class UserController {
                     message: 'Password is not valid',
                 });
             }
-            const token = await signToken(user._id);
+            const accessToken = await signAccessToken(user._id);
+            const refreshToken = await signRefreshToken(user._id);
             // console.log(token, user._id.toString());
             // setDaily(user._id.toString(), token, 60);
-            await client.set(user._id.toString(), token, {
-                EX: 30 * 24 * 60 * 60,
+            await client.set(user._id.toString(), refreshToken, {
+                EX: 3600 * 24 * 7,
             });
-            res.json({ token });
+            res.json({ accessToken, refreshToken });
         } catch (error) {
             console.log(error);
             next(error);
@@ -179,24 +181,34 @@ class UserController {
         }
     }
 
+    async RefreshToken(req, res) {
+        try {
+            const { refreshToken } = req.body;
+            if (!refreshToken) {
+                throw createError.BadRequest();
+            }
+            const { _id } = await verifyRefreshToken(refreshToken);
+            const accessToken = await signAccessToken(_id);
+            const newRefreshToken = await signAccessToken(_id);
+            return res.json({
+                accessToken,
+                refreshToken: newRefreshToken,
+            });
+        } catch (error) {
+            throw createError.InternalServerError();
+        }
+    }
+
     async Logout(req, res, next) {
         try {
-            const { token } = req.body;
-            if (!token) {
-                return res.status(401).json({
-                    message: 'Unauthorized',
-                });
+            console.log(req.payload);
+            const { _id } = req.payload;
+            const refreshToken = await client.get(_id.toString());
+            if (!refreshToken) {
+                throw createError.Forbidden();
             }
-
-            const { _id } = await verifyToken(token);
-            const result = await client.del(_id.toString());
-
-            if (!result) {
-                return res.status(401).json({
-                    message: 'Logout failed',
-                });
-            }
-
+            // const { _id } = await verifyRefreshToken(refreshToken);
+            await client.del(_id.toString());
             return res.status(200).json({
                 message: 'Logout!',
             });

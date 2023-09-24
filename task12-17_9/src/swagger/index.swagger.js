@@ -107,13 +107,11 @@
  *      tags:
  *      - user
  *      parameters:
- *      - in: body
- *        name: user
- *        schema:
- *           type: object
- *           properties:
- *             token:
- *               type: string
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *        description: token for authentication
  *      responses:
  *          200:
  *              description: success
@@ -421,6 +419,27 @@
  *           type: object
  *           properties:
  *             userId:
+ *               type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /user/refresh-token:
+ *  post:
+ *      description: responses
+ *      tags:
+ *      - user private
+ *      parameters:
+ *      - in: body
+ *        required: true
+ *        name: admin
+ *        schema:
+ *           type: object
+ *           properties:
+ *             refreshToken:
  *               type: string
  *      responses:
  *          200:
