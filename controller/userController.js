@@ -174,7 +174,7 @@ const userController = {
             }
             const OTP = generateOTP();
             // Save OTP to Redis
-            const saveOTP = Redis.saveOTPToRedis(email, OTP, 300, async function(err, reply) {
+            const saveOTP = Redis.saveOTPToRedis(email, OTP, 60, async function(err, reply) {
                 if (err) {
                     return res.status(500).json(err);
                 } else {
