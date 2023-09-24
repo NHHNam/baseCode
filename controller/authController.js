@@ -8,7 +8,7 @@ let refreshTokens = [];
 let count = 0;
 const authController = {
 
-    //Register User
+    //Register user
     registerUser: async(req, res) => {
         try {
 
