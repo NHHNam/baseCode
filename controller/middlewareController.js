@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const middlewareController = {
 
-    //Check User
+    //Check Token
     verifyToken: (req, res, next) => {
         const token = req.headers.token;
         if (token) {
@@ -18,6 +18,17 @@ const middlewareController = {
             res.status(401).json("You're not authenticated ");
         }
 
+    },
+
+    //Check User
+    verifyTokenAnUserAuth: (req, res, next) => {
+        middlewareController.verifyToken(req, res, () => {
+            if (req.user.role === ("user")) {
+                next();
+            } else {
+                res.status(403).json("You're not allowed access");
+            }
+        })
     },
 
     //Check Admin

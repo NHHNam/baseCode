@@ -343,6 +343,28 @@
  */
 /**
  * @swagger
+ * /v1/payment/{id}:
+ *   delete:
+ *     description: Delete Payment
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the payment
+ *       - in: header
+ *         name: token
+ *         required: true
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *     responses:
+ *       200:
+ *         description: Payment delete successfully.
+ *     tags:
+ *          - Payment
+ */
+/**
+ * @swagger
  * /v1/post:
  *  post:
  *      description: responses
