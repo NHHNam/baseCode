@@ -38,6 +38,20 @@ const paymentController = {
         } catch (err) {
             res.status(500).json(err);
         }
+    },
+
+    //Delete Payment
+    deletePayment: async(req, res) => {
+        try {
+            const deletedPayment = await Payment.deleteOne({ _id: req.params.id });
+            if (deletedPayment.deletedCount === 1) {
+                res.status(200).json({ message: "Payment deleted successfully" });
+            } else {
+                res.status(404).json({ error: "Payment not found" });
+            }
+        } catch (err) {
+            res.status(500).json(err);
+        }
     }
 
 }
