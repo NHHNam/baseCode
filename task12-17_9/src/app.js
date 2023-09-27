@@ -1,5 +1,5 @@
 import express from 'express';
-import bodyParser from 'body-parser';
+import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
 import route from './routes/index.router.js';
@@ -7,13 +7,19 @@ import connectMongoose from './databases/mongoose.int.js';
 
 const app = express();
 
+// cors
+const corOptions = {
+    origin: true,
+    credentials: true,
+};
+app.use(cors(corOptions));
+
 app.use(express.json());
 app.use(
     express.urlencoded({
         extended: true,
     }),
 );
-app.use(bodyParser.json());
 
 const options = {
     definition: {

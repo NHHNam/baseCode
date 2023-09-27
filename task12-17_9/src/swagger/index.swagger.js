@@ -189,18 +189,20 @@
  *        required: true
  *        description: token for authentication
  *      - in: formData
+ *        required: true
  *        name: fileUpload
  *        type: file
  *        description: The file to upload
- *      - in: body
- *        name: admin
- *        schema:
- *           type: object
- *           properties:
- *             title:
- *               type: string
- *             description:
- *               type: string
+ *        requestBody:
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  title:
+ *                    type: string
+ *                  description:
+ *                    type: string
  *      responses:
  *          200:
  *              description: success
@@ -440,6 +442,70 @@
  *           type: object
  *           properties:
  *             refreshToken:
+ *               type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /admin/payment:
+ *  post:
+ *      description: responses
+ *      tags:
+ *      - admin
+ *      parameters:
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *      - in: body
+ *        description: Nếu không có trường userId thì sẽ add payment cho chính admin đang sử dụng API
+ *        required: true
+ *        name: admin
+ *        schema:
+ *           type: object
+ *           properties:
+ *             userId:
+ *               type: string
+ *             cardId:
+ *               type: string
+ *             fullName:
+ *               type: string
+ *             nameCard:
+ *               type: string
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /admin/payment:
+ *  put:
+ *      description: responses
+ *      tags:
+ *      - admin
+ *      parameters:
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *      - in: body
+ *        description: Nếu không có trường userId thì sẽ update payment cho chính admin đang sử dụng API
+ *        required: true
+ *        name: admin
+ *        schema:
+ *           type: object
+ *           properties:
+ *             userId:
+ *               type: string
+ *             cardId:
+ *               type: string
+ *             fullName:
+ *               type: string
+ *             nameCard:
  *               type: string
  *      responses:
  *          200:

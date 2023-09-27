@@ -1,5 +1,7 @@
+import { Types } from 'mongoose';
 import Post from '../models/post.model.js';
 import User from '../models/user.model.js';
+import Payment from '../models/payment.model.js';
 import cloudinary from '../services/cloudinary.service.js';
 import transporter from '../services/nodemailer.service.js';
 
@@ -9,6 +11,7 @@ class AdminController {
             var thumnail;
             if (req.file) {
                 var result = await cloudinary.uploader.upload(req.file.path);
+                console.log(result);
                 thumnail = result.url;
             }
             const { _id } = req.payload;
@@ -35,8 +38,13 @@ class AdminController {
 
     async UpdatePost(req, res, next) {
         try {
-            const { postId, description, title } = req.body;
-            const post = await Post.findByIdAndUpdate(postId, { description, title });
+            const { postId, ...postField } = req.body;
+            if (!Types.ObjectId.isValid(postId)) {
+                return res.status(400).json({
+                    message: 'Invalid postId format',
+                });
+            }
+            const post = await Post.findByIdAndUpdate(postId, postField);
             if (!post) {
                 return res.json({
                     message: 'Post is not found',
@@ -54,29 +62,31 @@ class AdminController {
     async DeletePost(req, res, next) {
         try {
             const { postId } = req.body;
-            const result = await Post.findByIdAndDelete(postId);
-            if (!result) {
-                return res.json({
-                    message: 'Post is not found',
+            if (!Types.ObjectId.isValid(postId)) {
+                return res.status(400).json({
+                    message: 'Invalid postId format',
                 });
             }
+            const post = await Post.findById(postId);
+            if (!post) {
+                return res.json({
+                    message: 'The post is not found',
+                });
+            }
+            const url = post.thumnail;
+            const startIndex = url.lastIndexOf('/') + 1;
+            const endIndex = url.lastIndexOf('.');
+            const publicId = url.slice(startIndex, endIndex);
+            await cloudinary.uploader.destroy(publicId);
+            await Post.findByIdAndDelete(postId);
             return res.status(200).json({
                 message: 'Delete post successfully',
             });
         } catch (error) {
             console.log(error);
-            next(error);
-        }
-    }
-
-    TestMulter(req, res, next) {
-        try {
-            cloudinary.uploader.upload(req.file.path, (err, result) => {
-                if (err) throw new Error(err);
-                res.json(result);
+            return res.status(500).json({
+                message: 'Internal server error',
             });
-        } catch (error) {
-            throw new Error(error);
         }
     }
 
@@ -97,6 +107,11 @@ class AdminController {
     async LockUser(req, res) {
         try {
             const { userId } = req.body;
+            if (!Types.ObjectId.isValid(userId)) {
+                return res.status(400).json({
+                    message: 'Invalid userId format',
+                });
+            }
             const user = await User.findOne({ role: 'user', _id: userId });
             if (!user) {
                 return res.json({
@@ -144,6 +159,78 @@ class AdminController {
             return res.status(200).json({
                 message: `Refresh password for ${user.email} successfully!`,
             });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async AddPayment(req, res) {
+        try {
+            const { _id } = req.payload;
+            const { userId, ...paymentField } = req.body;
+            const id = userId || _id;
+            if (!Types.ObjectId.isValid(id)) {
+                return res.status(400).json({
+                    message: 'Invalid id format',
+                });
+            }
+            const user = await User.findById(id);
+            console.log(user);
+            if (!user) {
+                return res.status(402).json({
+                    message: 'User is not found',
+                });
+            }
+            if (user.payment) {
+                return res.status(402).json({
+                    message: 'User is already exist a payment',
+                });
+            }
+            const newPayment = new Payment(paymentField);
+            const savePayment = await newPayment.save();
+            const paymentId = savePayment._id;
+
+            user.payment = paymentId;
+            await user.save();
+            return res.status(200).json({
+                message: 'Add payment successfully!',
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                message: 'Internal server error',
+            });
+        }
+    }
+
+    async UpdatePayment(req, res) {
+        try {
+            const { _id } = req.payload;
+            const { userId, ...paymentField } = req.body;
+            const id = userId || _id;
+            if (!Types.ObjectId.isValid(id)) {
+                return res.status(400).json({
+                    message: 'Invalid id format',
+                });
+            }
+            const user = await User.findById(id);
+            if (!user) {
+                return res.status(402).json({
+                    message: 'User is not found',
+                });
+            }
+            const paymentId = user.payment;
+            if (!paymentId) {
+                return res.status(402).json({
+                    message: "User haven't payment yet",
+                });
+            } else {
+                await Payment.findByIdAndUpdate({ _id: paymentId }, paymentField);
+
+                return res.status(200).json({
+                    message: 'Update payment successfully!',
+                });
+            }
         } catch (error) {
             throw error;
         }

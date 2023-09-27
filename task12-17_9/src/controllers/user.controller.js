@@ -9,13 +9,22 @@ import transporter from '../services/nodemailer.service.js';
 class UserController {
     async Register(req, res, next) {
         try {
-            const { userName } = req.body;
-            const user = await User.find({ userName });
-            if (user.length > 0) {
+            const { userName, email } = req.body;
+            console.log(userName);
+            const userUN = await User.findOne({ userName });
+            const userEmail = await User.findOne({ email });
+
+            if (userUN) {
                 return res.json({
-                    message: 'Username is really exists',
+                    message: 'Username is already exists',
                 });
             }
+            if (userEmail) {
+                return res.json({
+                    message: 'Email is already exists',
+                });
+            }
+
             const userRegister = new User(req.body);
             await userRegister.save();
             return res.status(200).json({
