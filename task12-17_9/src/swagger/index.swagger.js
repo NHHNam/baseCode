@@ -239,6 +239,10 @@
  *        type: string
  *        required: true
  *        description: token for authentication
+ *      - in: formData
+ *        name: fileUpload
+ *        type: file
+ *        description: The file to upload
  *      - in: body
  *        name: admin
  *        schema:

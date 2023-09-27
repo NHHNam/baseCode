@@ -10,8 +10,7 @@ class AdminController {
         try {
             var thumnail;
             if (req.file) {
-                var result = await cloudinary.uploader.upload(req.file.path);
-                console.log(result);
+                const result = await cloudinary.uploader.upload(req.file.path);
                 thumnail = result.url;
             }
             const { _id } = req.payload;
@@ -39,17 +38,32 @@ class AdminController {
     async UpdatePost(req, res, next) {
         try {
             const { postId, ...postField } = req.body;
+            let newThumnail;
             if (!Types.ObjectId.isValid(postId)) {
                 return res.status(400).json({
                     message: 'Invalid postId format',
                 });
             }
-            const post = await Post.findByIdAndUpdate(postId, postField);
+            const post = await Post.findById(postId);
+
             if (!post) {
                 return res.json({
                     message: 'Post is not found',
                 });
             }
+            if (req.file) {
+                const thumnail = post.thumnail;
+                const startIndex = thumnail.lastIndexOf('/') + 1;
+                const endIndex = thumnail.lastIndexOf('.');
+                const publicId = thumnail.slice(startIndex, endIndex);
+                await cloudinary.uploader.destroy(publicId);
+                const result = await cloudinary.uploader.upload(req.file.path);
+                newThumnail = result.url;
+                await Post.findByIdAndUpdate(postId, { ...postField, thumnail: newThumnail });
+            } else {
+                await Post.findByIdAndUpdate(postId, postField);
+            }
+
             return res.status(200).json({
                 message: 'Update post successfully',
             });
