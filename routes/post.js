@@ -30,5 +30,4 @@ router.get("/SearchByTitle/:title", postController.searchByTitle);
 
 //Route search Description
 router.get("/SearchByDescription/:description", postController.searchByDescription);
-
 module.exports = router;

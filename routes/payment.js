@@ -4,12 +4,17 @@ const router = require("express").Router();
 
 //Route get payment
 router.get("/getPayment", (req, res) => {
-    const page = req.query.page;
-    if (page) {
-        paymentController.getPaymentByPage(req, res, parseInt(page) || 1);
+    if (middlewareController.verifyTokenAnAdminAuth) {
+        const page = req.query.page;
+        if (page) {
+            paymentController.getPaymentByPage(req, res, parseInt(page) || 1);
+        } else {
+            paymentController.getAllPayment(req, res);
+        }
     } else {
-        paymentController.getAllPayment(req, res);
+        res.status(403).json({ error: "Access denied" });
     }
+
 });
 
 //Route add payment
@@ -23,10 +28,10 @@ router.post("/addPayment", (req, res, next) => {
 
 //Route update payment
 router.put("/updatePayment/:id", (req, res, next) => {
-    if (middlewareController.verifyTokenAnUserAuth) {
+    if (middlewareController.verifyTokenAnUserAuth || middlewareController.verifyTokenAnAdminAuth) {
         paymentController.upadtePayment(req, res);
     } else {
-        paymentController.upadtePayment(req, res);
+        res.status(403).json({ error: "Access denied" });
     }
 });
 
@@ -34,11 +39,29 @@ router.put("/updatePayment/:id", (req, res, next) => {
 router.delete("/deletePayment/:id", middlewareController.verifyTokenAnAdminAuth, paymentController.deletePayment);
 
 //Route search cardID
-router.get("/SearchByCardId/:cardId", paymentController.searchByCardID);
+router.get("/SearchByCardId/:cardId", (req, res, next) => {
+    if (middlewareController.verifyTokenAnAdminAuth) {
+        paymentController.searchByCardID(req, res);
+    } else {
+        res.status(403).json({ error: "Access denied" });
+    }
+});
 
 //Route search fullName
-router.get("/SearchByFullName/:fullName", paymentController.searchByFullname);
+router.get("/SearchByFullName/:fullName", (req, res, next) => {
+    if (middlewareController.verifyTokenAnAdminAuth) {
+        paymentController.searchByFullname(req, res);
+    } else {
+        res.status(403).json({ error: "Access denied" });
+    }
+});
 
 //Route search nameCard
-router.get("/SearchByNameCard/:nameCard", paymentController.searchByNameCard);
+router.get("/SearchByNameCard/:nameCard", (req, res, next) => {
+    if (middlewareController.verifyTokenAnAdminAuth) {
+        paymentController.searchByNameCard(req, res);
+    } else {
+        res.status(403).json({ error: "Access denied" });
+    }
+});
 module.exports = router;
