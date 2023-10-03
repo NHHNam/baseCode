@@ -19,10 +19,10 @@ router.get("/getPayment", (req, res) => {
 
 //Route add payment
 router.post("/addPayment", (req, res, next) => {
-    if (middlewareController.verifyTokenAnAdminAuth) {
+    if (middlewareController.verifyTokenAnAdminAuth || middlewareController.verifyTokenAnUserAuth) {
         paymentController.addPayment(req, res);
     } else {
-        paymentController.addPaymentForUser(req, res);
+        res.status(403).json({ error: "Access denied" });
     }
 });
 
