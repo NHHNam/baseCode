@@ -1,23 +1,5 @@
 /**
  * @swagger
- * /v1/user:
- *  get:
- *      description: Get all users
- *      parameters:
- *       - in: header
- *         name: token
- *         required: true
- *         description: Bearer Token
- *         schema:
- *            type: string
- *      responses:
- *          200:
- *              description: Success
- *      tags:
- *          - User
- */
-/**
- * @swagger
  * /v1/auth/register:
  *  post:
  *      description: responses
@@ -64,7 +46,139 @@
  */
 /**
  * @swagger
- * /v1/user/{id}:
+ * /v1/user/getUser:
+ *  get:
+ *      description: Get users
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: query
+ *         name: page
+ *         description: Page number
+ *         schema:
+ *            type: integer 
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - User
+ */
+/**
+ * @swagger
+ * /v1/user/SearchByUsername/{username}:
+ *  get:
+ *      description: Search User by Username
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: username
+ *         description: Username
+ *         schema:
+ *            type: string
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - User
+ */
+/**
+ * @swagger
+ * /v1/user/SearchByFullName/{fullName}:
+ *  get:
+ *      description: Search User by fullName
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: fullName
+ *         description: fullName
+ *         schema:
+ *            type: string
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - User
+ */
+/**
+ * @swagger
+ * /v1/user/SearchByPoint/{point}:
+ *  get:
+ *      description: Search User by Point
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: point
+ *         description: Point
+ *         schema:
+ *            type: integer
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - User
+ */
+/**
+ * @swagger
+ * /v1/user/SearchByRole/{role}:
+ *  get:
+ *      description: Search User by Role
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: role
+ *         description: Role
+ *         schema:
+ *            type: string
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - User
+ */
+/**
+ * @swagger
+ * /v1/user/SearchByEmail/{email}:
+ *  get:
+ *      description: Search User by Email
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: email
+ *         description: Email
+ *         schema:
+ *            type: string
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - User
+ */
+/**
+ * @swagger
+ * /v1/user/updateUser/{id}:
  *   put:
  *     description: Update user information by providing the user's ID.
  *     parameters:
@@ -279,7 +393,95 @@
  */
 /**
  * @swagger
- * /v1/payment:
+ * /v1/payment/getPayment:
+ *  get:
+ *      description: Get payment
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: query
+ *         name: page
+ *         description: Page number
+ *         schema:
+ *            type: integer
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - Payment
+ */
+/**
+ * @swagger
+ * /v1/payment/SearchByCardId/{cardId}:
+ *  get:
+ *      description: Search Payment by cardId
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: cardId
+ *         description: CardID
+ *         schema:
+ *            type: string
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - Payment
+ */
+/**
+ * @swagger
+ * /v1/payment/SearchByFullName/{fullName}:
+ *  get:
+ *      description: Search Payment by fullName
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: fullName
+ *         description: fullName
+ *         schema:
+ *            type: string
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - Payment
+ */
+/**
+ * @swagger
+ * /v1/payment/SearchByNameCard/{nameCard}:
+ *  get:
+ *      description: Search Payment by nameCard
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: nameCard
+ *         description: nameCard
+ *         schema:
+ *            type: string
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - Payment
+ */
+/**
+ * @swagger
+ * /v1/payment/addpayment:
  *  post:
  *      description: responses
  *      parameters:
@@ -308,7 +510,7 @@
  */
 /**
  * @swagger
- * /v1/payment/{id}:
+ * /v1/payment/updatePayment/{id}:
  *   put:
  *     description: Update Payment
  *     parameters:
@@ -343,7 +545,7 @@
  */
 /**
  * @swagger
- * /v1/payment/{id}:
+ * /v1/payment/deletePayment/{id}:
  *   delete:
  *     description: Delete Payment
  *     parameters:
@@ -365,9 +567,75 @@
  */
 /**
  * @swagger
- * /v1/post:
+ * /v1/post/getPost:
+ *  get:
+ *      description: Get post
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: query
+ *         name: page
+ *         description: Page number
+ *         schema:
+ *            type: integer
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - Post
+ */
+/**
+ * @swagger
+ * /v1/post/SearchByTitle/{title}:
+ *  get:
+ *      description: Search Post by Title
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: title
+ *         description: Title
+ *         schema:
+ *            type: string
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - Post
+ */
+/**
+ * @swagger
+ * /v1/post/SearchByDescription/{description}:
+ *  get:
+ *      description: Search Post by description
+ *      parameters:
+ *       - in: header
+ *         name: token
+ *         description: Bearer Token
+ *         schema:
+ *            type: string
+ *       - in: path
+ *         name: description
+ *         description: description
+ *         schema:
+ *            type: string
+ *      responses:
+ *          200:
+ *              description: Success
+ *      tags:
+ *          - Post
+ */
+/**
+ * @swagger
+ * /v1/post/addPost:
  *  post:
- *      description: responses
+ *      description: Add Post
  *      parameters:
  *      - in: header
  *        name: token
@@ -394,7 +662,7 @@
  */
 /**
  * @swagger
- * /v1/post/{id}:
+ * /v1/post/updatePost/{id}:
  *   put:
  *     description: Update Post
  *     parameters:
@@ -429,7 +697,7 @@
  */
 /**
  * @swagger
- * /v1/post/{id}:
+ * /v1/post/deletePost/{id}:
  *   delete:
  *     description: Delete Post
  *     parameters:

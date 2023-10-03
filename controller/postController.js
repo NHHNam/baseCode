@@ -1,6 +1,31 @@
 const Post = require("../model/Post");
+const PAGE_SIZE = 2;
 
 const postController = {
+    //Get Page
+    getPostByPage: async(req, res, page) => {
+        try {
+            const skip = (page - 1) * PAGE_SIZE;
+            const posts = await Post.find()
+                .skip(skip)
+                .limit(PAGE_SIZE);
+
+            res.status(200).json(posts);
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    },
+
+    //Get All 
+    getAllPost: async(req, res) => {
+        try {
+            const posts = await Post.find();
+            res.status(200).json(posts);
+
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    },
 
     //Add Post
     addPost: async(req, res) => {
@@ -75,6 +100,26 @@ const postController = {
         } catch (err) {
             res.status(500).json(err);
 
+        }
+    },
+
+    //Search Title
+    searchByTitle: async(req, res) => {
+        try {
+            const result = await Post.find({ title: { $regex: req.params.title, $options: 'i' } });
+            res.status(200).json(result);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+
+    //Search Description
+    searchByDescription: async(req, res) => {
+        try {
+            const result = await Post.find({ description: { $regex: req.params.description, $options: 'i' } });
+            res.status(200).json(result);
+        } catch (err) {
+            res.status(500).json(err);
         }
     }
 }

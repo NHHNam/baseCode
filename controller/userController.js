@@ -7,8 +7,22 @@ const generateOTP = require("../utils/generateOTP");
 const randomPassword = require("../utils/randomPassword");
 const Redis = require("../utils/redis");
 const Mail = require("nodemailer/lib/mailer");
+const PAGE_SIZE = 2;
 
 const userController = {
+    //Get Page
+    getUserByPage: async(req, res, page) => {
+        try {
+            const skip = (page - 1) * PAGE_SIZE;
+            const users = await User.find()
+                .skip(skip)
+                .limit(PAGE_SIZE);
+
+            res.status(200).json(users);
+        } catch (err) {
+            res.status(500).json(err)
+        }
+    },
 
     //Get All User
     getAllUser: async(req, res) => {
@@ -234,7 +248,54 @@ const userController = {
         } catch (error) {
             res.status(500).json(error);
         }
-    }
+    },
 
+    //Search Username
+    searchByUsername: async(req, res) => {
+        try {
+            const result = await User.find({ username: req.params.username });
+            res.status(200).json(result);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+
+    //Search Fullname
+    searchByFullname: async(req, res) => {
+        try {
+            const result = await User.find({ fullName: req.params.fullName });
+            res.status(200).json(result);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+
+    //Search Point
+    searchByPoint: async(req, res) => {
+        try {
+            const result = await User.find({ point: req.params.point });
+            res.status(200).json(result);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+    //Search Role
+    searchByRole: async(req, res) => {
+        try {
+            const result = await User.find({ role: req.params.role });
+            res.status(200).json(result);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+    //Search Email
+    searchByEmail: async(req, res) => {
+        try {
+            const result = await User.find({ email: req.params.email });
+            res.status(200).json(result);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    }
 }
 module.exports = userController;
