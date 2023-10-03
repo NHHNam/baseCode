@@ -8,4 +8,4 @@ app.use(express.json());
 redisUtil.start()
 connectDB()
 routes(app)
-app.listen(3001,()=>console.log('hello world'))
+app.listen(3000,()=>console.log('hello world'))

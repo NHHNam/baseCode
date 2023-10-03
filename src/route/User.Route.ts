@@ -14,6 +14,6 @@ userRouter.post("/searchPayment",authMiddleware,UserController.handleSearchPayme
 userRouter.post("/changePassword",authMiddleware,UserController.handleChangePassword)
 userRouter.post("/forgetPassword",authMiddleware,UserController.handleSendOpt)
 userRouter.post("/handleChangePassword",authMiddleware,UserController.handleForgetPassword)
-// userRouter.post("/refreshPassword",authMiddleware,UserController.handleRefreshPassword)
-
+userRouter.post("/getDocument",authMiddleware,UserController.handleGetDocument)
+userRouter.post("/search",UserController.handleSearchService)
 export default userRouter

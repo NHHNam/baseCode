@@ -6,7 +6,7 @@ mongoose.Promise = global.Promise
 const db ={
     user:Model,
     pay:Model,
-    post:Model
+    post:Model,
 }
 db.user = User
 db.pay = Pay

@@ -5,6 +5,8 @@ import db from "../model/db";
 import UserUtils from "../util/user.util";
 import JwtTokenUtils from "../util/jwt.util";
 import redisUtil from "../util/redis.util";
+import { pagespeedonline } from "googleapis/build/src/apis/pagespeedonline";
+import { resolve } from "path";
 export default class UserController {
     static testAuth = async(
         req: Request,
@@ -45,16 +47,16 @@ export default class UserController {
         res: Response
     )=>{
         try {
-            const {UserName,password}=req.body
+            const {UserName,Password}=req.body
             const user = await db.user.findOne({Username:UserName})
             if (user == null) {
                 return res.status(403).json({msg:"This account has not existed"})
             }
-            const isUserValid = await UserUtils.comparePassword(password,user.Password)
+            const isUserValid = await UserUtils.comparePassword(Password,user.Password)
             if (isUserValid) {
                 let token = await JwtTokenUtils.generateToken(user.Username,user.Role,user._id.toString(),user.isLock)
-                await JwtTokenUtils.generateRefreshToken(user.Username,user.Role,user._id.toString())
-                return res.status(200).json({token})
+                let refreshToken = await JwtTokenUtils.generateRefreshToken(user.Username,user.Role,user._id.toString())
+                return res.status(200).json({token,refreshToken})
             } else {
                 return res.status(403).json({msg:"wrong password"})
             }
@@ -95,8 +97,8 @@ export default class UserController {
             });
             await newUser.save()
             let token = await JwtTokenUtils.generateToken(Username,Role,newUser._id.toString(),false)
-            await JwtTokenUtils.generateRefreshToken(Username,Role,newUser._id.toString())
-            return res.status(200).json({token})
+            let refreshToken = await JwtTokenUtils.generateRefreshToken(Username,Role,newUser._id.toString())
+            return res.status(200).json({token,refreshToken})
         } catch(err) {
             console.log(err)
             return res.status(403).json({msg:err})
@@ -253,6 +255,22 @@ export default class UserController {
             return res.status(403).json({err:err})
         }
     }
+    static handleGetDocument = async(
+        req:Request,
+        res:Response
+    ) =>{
+        try {
+            let  {
+                document,
+                page
+            } = req.body
+            let result = await UserUtils.getDocument(document,page)
+            return res.status(200).json({result})
+        } catch(err) {
+            console.log(err)
+            return res.status(403).json({err})
+        }
+    }
     static handleForgetPassword = async(
         req:Request,
         res:Response
@@ -276,6 +294,22 @@ export default class UserController {
             })
         }
     };
+    static handleSearchService = async(
+        req:Request,
+        res:Response
+    )=>{
+        try {
+            const {
+                query,
+                property,
+            } = req.body
+            let result = await UserUtils.searchService(property,query)
+            return res.status(200).json({result})
+        } catch(err) {
+            console.log(err)
+            return res.status(403).json({err})
+        }
+    }
     // static handleSentEmail = async(
     //     req:Request,
     //     res:Response
