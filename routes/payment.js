@@ -39,29 +39,11 @@ router.put("/updatePayment/:id", (req, res, next) => {
 router.delete("/deletePayment/:id", middlewareController.verifyTokenAnAdminAuth, paymentController.deletePayment);
 
 //Route search cardID
-router.get("/SearchByCardId/:cardId", (req, res, next) => {
-    if (middlewareController.verifyTokenAnAdminAuth) {
-        paymentController.searchByCardID(req, res);
-    } else {
-        res.status(403).json({ error: "Access denied" });
-    }
-});
+router.get("/SearchByCardId/:cardId", middlewareController.verifyTokenAnAdminAuth, paymentController.searchByCardID);
 
 //Route search fullName
-router.get("/SearchByFullName/:fullName", (req, res, next) => {
-    if (middlewareController.verifyTokenAnAdminAuth) {
-        paymentController.searchByFullname(req, res);
-    } else {
-        res.status(403).json({ error: "Access denied" });
-    }
-});
+router.get("/SearchByFullName/:fullName", middlewareController.verifyTokenAnAdminAuth, paymentController.searchByFullname);
 
 //Route search nameCard
-router.get("/SearchByNameCard/:nameCard", (req, res, next) => {
-    if (middlewareController.verifyTokenAnAdminAuth) {
-        paymentController.searchByNameCard(req, res);
-    } else {
-        res.status(403).json({ error: "Access denied" });
-    }
-});
+router.get("/SearchByNameCard/:nameCard", middlewareController.verifyTokenAnAdminAuth, paymentController.searchByNameCard);
 module.exports = router;
