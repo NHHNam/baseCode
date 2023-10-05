@@ -20,26 +20,15 @@ const middlewareController = {
 
     },
 
-    //Check User
-    verifyTokenAnUserAuth: (req, res, next) => {
+    //Check User/Admin
+    verifyTokenAnAuth: (req, res, next) => {
         middlewareController.verifyToken(req, res, () => {
-            if (req.user.role === ("user")) {
+            if ((req.user.role === ("user") && req.user.id == req.params.id) || req.user.role === ("admin") || (req.user.role === ("user") && req.user.paymentId == req.params.id)) {
                 next();
             } else {
                 res.status(403).json("You're not allowed access");
             }
         })
-    },
-
-    //Check Admin
-    verifyTokenAnAdminAuth: (req, res, next) => {
-        middlewareController.verifyToken(req, res, () => {
-            if (req.user.role === ("admin")) {
-                next();
-            } else {
-                res.status(403).json("You're not allowed access");
-            }
-        });
     },
 };
 module.exports = middlewareController;

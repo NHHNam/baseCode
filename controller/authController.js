@@ -36,6 +36,8 @@ const authController = {
         return jwt.sign({
                 id: user.id,
                 role: user.role,
+                username: user.username,
+                paymentId: user.paymentId,
             },
             process.env.JWT_ACCESS_KEY, {
                 expiresIn: "30m"
@@ -47,6 +49,8 @@ const authController = {
         return jwt.sign({
                 id: user.id,
                 role: user.role,
+                username: user.username,
+                paymentId: user.paymentId,
             },
             process.env.JWT_REFRESH_KEY, {
                 expiresIn: "365d"

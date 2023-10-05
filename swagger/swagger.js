@@ -531,7 +531,7 @@
  *         schema:
  *           type: object
  *           properties:
- *             paymentID:
+ *             cardID:
  *               type: string
  *             fullName:
  *               type: string

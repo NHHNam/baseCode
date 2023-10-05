@@ -4,46 +4,35 @@ const router = require("express").Router();
 
 //Route get payment
 router.get("/getPayment", (req, res) => {
-    if (middlewareController.verifyTokenAnAdminAuth) {
+    // Gọi middleware verifyTokenAnAuth để kiểm tra quyền truy cập
+    middlewareController.verifyTokenAnAuth(req, res, () => {
         const page = req.query.page;
         if (page) {
             paymentController.getPaymentByPage(req, res, parseInt(page) || 1);
         } else {
             paymentController.getAllPayment(req, res);
         }
-    } else {
+    }, () => {
+        // Middleware không cho phép truy cập
         res.status(403).json({ error: "Access denied" });
-    }
-
+    });
 });
 
 //Route add payment
-router.post("/addPayment", (req, res, next) => {
-    if (middlewareController.verifyTokenAnAdminAuth || middlewareController.verifyTokenAnUserAuth) {
-        paymentController.addPayment(req, res);
-    } else {
-        res.status(403).json({ error: "Access denied" });
-    }
-});
+router.post("/addPayment", middlewareController.verifyTokenAnAuth, paymentController.addPayment);
 
 //Route update payment
-router.put("/updatePayment/:id", (req, res, next) => {
-    if (middlewareController.verifyTokenAnUserAuth || middlewareController.verifyTokenAnAdminAuth) {
-        paymentController.upadtePayment(req, res);
-    } else {
-        res.status(403).json({ error: "Access denied" });
-    }
-});
+router.put("/updatePayment/:id", middlewareController.verifyTokenAnAuth, paymentController.upadtePayment);
 
 //Route delete payment
-router.delete("/deletePayment/:id", middlewareController.verifyTokenAnAdminAuth, paymentController.deletePayment);
+router.delete("/deletePayment/:id", middlewareController.verifyTokenAnAuth, paymentController.deletePayment);
 
 //Route search cardID
-router.get("/SearchByCardId/:cardId", middlewareController.verifyTokenAnAdminAuth, paymentController.searchByCardID);
+router.get("/SearchByCardId/:cardId", middlewareController.verifyTokenAnAuth, paymentController.searchByCardID);
 
 //Route search fullName
-router.get("/SearchByFullName/:fullName", middlewareController.verifyTokenAnAdminAuth, paymentController.searchByFullname);
+router.get("/SearchByFullName/:fullName", middlewareController.verifyTokenAnAuth, paymentController.searchByFullname);
 
 //Route search nameCard
-router.get("/SearchByNameCard/:nameCard", middlewareController.verifyTokenAnAdminAuth, paymentController.searchByNameCard);
+router.get("/SearchByNameCard/:nameCard", middlewareController.verifyTokenAnAuth, paymentController.searchByNameCard);
 module.exports = router;

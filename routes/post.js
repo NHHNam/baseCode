@@ -14,16 +14,16 @@ router.get("/getPost", (req, res) => {
 });
 
 //Route add Post
-router.post("/addPost", middlewareController.verifyTokenAnAdminAuth, postController.addPost);
+router.post("/addPost", middlewareController.verifyTokenAnAuth, postController.addPost);
 
 //Route update Post
-router.put("/updatePost/:id", middlewareController.verifyTokenAnAdminAuth, postController.upadtePost);
+router.put("/updatePost/:id", middlewareController.verifyTokenAnAuth, postController.updatePost);
 
 //Route delete Post
-router.delete("/deletePost/:id", middlewareController.verifyTokenAnAdminAuth, postController.deletePost);
+router.delete("/deletePost/:id", middlewareController.verifyTokenAnAuth, postController.deletePost);
 
 //Route add Thumnail
-router.post("/addThumnail/:id", middlewareController.verifyTokenAnAdminAuth, upload.fields([{ name: "img", maxCount: 2 }]), postController.addThumnail);
+router.post("/addThumnail/:id", middlewareController.verifyTokenAnAuth, upload.fields([{ name: "img", maxCount: 2 }]), postController.addThumnail);
 
 //Route search Title
 router.get("/SearchByTitle/:title", postController.searchByTitle);

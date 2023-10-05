@@ -44,7 +44,7 @@ const postController = {
     },
 
     //Update Post
-    upadtePost: async(req, res) => {
+    updatePost: async(req, res) => {
         try {
 
             const updatedPost = await Post.findByIdAndUpdate(

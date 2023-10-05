@@ -49,7 +49,7 @@ const paymentController = {
             const updatedPayment = await Payment.findByIdAndUpdate(
                 req.params.id, {
                     $set: {
-                        cardId: req.body.cardId,
+                        cardId: req.body.cardID,
                         fullName: req.body.fullName,
                         nameCard: req.body.nameCard
                     }
