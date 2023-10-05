@@ -19,4 +19,7 @@ router.post('/refresh-token', UserController.RefreshToken);
 router.post('/payment', verifyUser, UserController.AddPayment);
 router.put('/payment', verifyUser, UserController.UpdatePayment);
 
+// transaction
+router.post('/atm-transaction', verifyUser, UserController.AtmTransaction);
+
 export default router;

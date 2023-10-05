@@ -1,10 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import bcrypt from 'bcrypt';
 
 const UserSchema = new Schema(
     {
         userName: { type: String, require: true, unique: true },
-        payment: { type: String, ref: 'payment', default: null },
+        payment: { type: Schema.ObjectId, ref: 'payment', default: null },
         password: { type: String, require: true },
         email: { type: String, require: true, unique: true },
         fullName: { type: String, require: true },
@@ -38,5 +39,7 @@ UserSchema.methods.isCheckPassword = async function (password) {
         return await bcrypt.compare(password, this.password);
     } catch (error) {}
 };
+
+UserSchema.plugin(mongoosePaginate);
 
 export default mongoose.model('user', UserSchema);

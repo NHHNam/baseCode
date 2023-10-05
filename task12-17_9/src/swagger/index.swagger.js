@@ -141,6 +141,8 @@
  *               type: string
  *             nameCard:
  *               type: string
+ *             amount:
+ *               type: number
  *      responses:
  *          200:
  *              description: success
@@ -170,6 +172,8 @@
  *               type: string
  *             nameCard:
  *               type: string
+ *             amount:
+ *               type: number
  *      responses:
  *          200:
  *              description: success
@@ -221,6 +225,14 @@
  *        type: string
  *        required: true
  *        description: token for authentication
+ *      - in: query
+ *        name: search
+ *        type: string
+ *        description: query description or title field, default = null
+ *      - in: query
+ *        name: page
+ *        type: number
+ *        description: Page number,  default = 1
  *      responses:
  *          200:
  *              description: success
@@ -374,6 +386,14 @@
  *        type: string
  *        required: true
  *        description: token for authentication
+ *      - in: query
+ *        name: search
+ *        type: string
+ *        description: query userName, email or fullName field, default = null
+ *      - in: query
+ *        name: page
+ *        type: number
+ *        description: Page number,  default = 1
  *      responses:
  *          200:
  *              description: success
@@ -455,6 +475,31 @@
 /**
  * @swagger
  * /admin/payment:
+ *  get:
+ *      description: responses
+ *      tags:
+ *      - admin
+ *      parameters:
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *      - in: query
+ *        name: search
+ *        type: string
+ *        description: query fullName, cardId or nameCard field, default = null
+ *      - in: query
+ *        name: page
+ *        type: number
+ *        description: Page number,  default = 1
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /admin/payment:
  *  post:
  *      description: responses
  *      tags:
@@ -479,6 +524,8 @@
  *               type: string
  *             nameCard:
  *               type: string
+ *             amount:
+ *               type: number
  *      responses:
  *          200:
  *              description: success
@@ -511,6 +558,35 @@
  *               type: string
  *             nameCard:
  *               type: string
+ *             amount:
+ *               type: number
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
+ * @swagger
+ * /user/atm-transaction:
+ *  post:
+ *      description: responses
+ *      tags:
+ *      - transaction
+ *      parameters:
+ *      - in: header
+ *        name: Authorization
+ *        type: string
+ *        required: true
+ *      - in: body
+ *        name: user
+ *        required: true
+ *        schema:
+ *           type: object
+ *           properties:
+ *             toUserId:
+ *               type: string
+ *             amount:
+ *               type: number
  *      responses:
  *          200:
  *              description: success

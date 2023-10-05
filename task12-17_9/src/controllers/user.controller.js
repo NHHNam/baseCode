@@ -1,4 +1,5 @@
 import createError from 'http-errors';
+import { startSession, Types } from 'mongoose';
 import User from '../models/user.model.js';
 import Payment from '../models/payment.model.js';
 import { signAccessToken, signOtpToken, signRefreshToken } from '../services/jwt.service.js';
@@ -236,7 +237,7 @@ class UserController {
                     message: 'User already has payment',
                 });
             }
-            const newPayment = new Payment(req.body);
+            const newPayment = new Payment({ ...req.body, userId: _id });
             const savePayment = await newPayment.save();
 
             const paymentId = savePayment._id;
@@ -267,6 +268,62 @@ class UserController {
         } catch (error) {
             console.log(error);
             next(error);
+        }
+    }
+
+    async AtmTransaction(req, res) {
+        const session = await startSession();
+        try {
+            const { _id } = req.payload;
+            const { toUserId, amount } = req.body;
+            if (!Types.ObjectId.isValid(toUserId)) {
+                return res.status(400).json({
+                    message: 'Invalid id format',
+                });
+            }
+            const userFrom = await User.findById(_id);
+            if (!userFrom.payment) {
+                return res.status(400).json({
+                    message: "User haven't payment yet",
+                });
+            }
+            const paymentFrom = userFrom.payment;
+
+            const userTo = await User.findById(toUserId);
+            if (!userTo.payment) {
+                return res.status(400).json({
+                    message: "User haven't payment yet",
+                });
+            }
+            const paymentTo = userTo.payment;
+
+            session.startTransaction();
+            const amountFrom = await Payment.findByIdAndUpdate(
+                paymentFrom,
+                {
+                    $inc: { amount: -amount },
+                },
+                { session, new: true },
+            );
+            console.log(`fromId ${_id}: ${amountFrom}`);
+
+            const amountTo = await Payment.findByIdAndUpdate(
+                paymentTo,
+                {
+                    $inc: { amount: amount },
+                },
+                { session, new: true },
+            );
+            console.log(`toId ${toUserId}: ${amountTo}`);
+            await session.commitTransaction();
+            return res.status(200).json({
+                message: 'Transfer is Ok',
+            });
+        } catch (error) {
+            await session.abortTransaction();
+            return res.status(500).json(error);
+        } finally {
+            await session.endSession();
         }
     }
 }

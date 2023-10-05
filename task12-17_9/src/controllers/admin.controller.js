@@ -27,7 +27,36 @@ class AdminController {
 
     async ShowPost(req, res, next) {
         try {
-            const posts = await Post.find();
+            const { page = 1, search = null } = req.query;
+            const limit = 5;
+            const query = {};
+            if (search) {
+                query.$or = [
+                    { title: { $regex: search, $options: 'i' } },
+                    { description: { $regex: search, $options: 'i' } },
+                ];
+            }
+
+            const options = {
+                limit,
+                page,
+                populate: {
+                    path: 'userId',
+                    model: 'user',
+                    select: {
+                        _id: 0,
+                        email: 1,
+                        fullName: 1,
+                    },
+                },
+                select: {
+                    _id: 0,
+                    createdAt: 0,
+                    updatedAt: 0,
+                },
+            };
+
+            const posts = await Post.paginate(query, options);
             return res.status(200).json(posts);
         } catch (error) {
             console.log(error);
@@ -106,7 +135,30 @@ class AdminController {
 
     async ShowUser(req, res) {
         try {
-            const users = await User.find({ role: 'user' });
+            const { search = null, page = 1 } = req.query;
+            const limit = 5;
+            const query = { role: 'user' };
+
+            if (search) {
+                query.$or = [
+                    { userName: { $regex: search, $options: 'i' } },
+                    { email: { $regex: search, $options: 'i' } },
+                    { fullName: { $regex: search, $options: 'i' } },
+                ];
+            }
+            const options = {
+                limit,
+                page,
+                select: {
+                    _id: 0,
+                    createdAt: 0,
+                    updatedAt: 0,
+                    password: 0,
+                },
+            };
+            const users = await User.paginate(query, options);
+
+            // const users = await User.find({ role: 'user' });
             if (!users) {
                 return res.json({
                     message: 'Users is empty',
@@ -178,6 +230,105 @@ class AdminController {
         }
     }
 
+    async ShowPayment(req, res, next) {
+        try {
+            const { search = null, page = 1 } = req.query;
+            const limit = 5;
+            const query = {};
+            if (search) {
+                query.$or = [
+                    { fullName: { $regex: search, $options: 'i' } },
+                    { nameCard: { $regex: search, $options: 'i' } },
+                    { cardId: { $regex: search, $options: 'i' } },
+                ];
+            }
+
+            const options = {
+                limit,
+                page,
+                populate: {
+                    path: 'userId',
+                    model: 'user',
+                    select: {
+                        _id: 0,
+                        createdAt: 0,
+                        updatedAt: 0,
+                        password: 0,
+                        payment: 0,
+                    },
+                },
+                select: {
+                    _id: 0,
+                    createdAt: 0,
+                    updatedAt: 0,
+                },
+            };
+            const payments = await Payment.paginate(query, options);
+            return res.status(200).json(payments);
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+
+        // try {
+        //     const { search = null, page = 1 } = req.query;
+        //     const limit = 5;
+        //     const query = {};
+        //     if (search) {
+        //         query.$or = [
+        //             { fullName: { $regex: search, $options: 'i' } },
+        //             { nameCard: { $regex: search, $options: 'i' } },
+        //             { cardId: { $regex: search, $options: 'i' } },
+        //         ];
+        //     }
+
+        //     const pipeline = [];
+
+        //     if (Object.keys(query).length > 0) {
+        //         pipeline.push({
+        //             $match: query,
+        //         });
+        //     }
+
+        //     pipeline.push({
+        //         $lookup: {
+        //             from: 'users',
+        //             localField: '_id',
+        //             foreignField: 'payment',
+        //             as: 'user',
+        //         },
+        //     });
+
+        //     pipeline.push({
+        //         $project: {
+        //             _id: 0,
+        //             createdAt: 0,
+        //             updatedAt: 0,
+        //             'user._id': 0,
+        //             'user.createdAt': 0,
+        //             'user.updatedAt': 0,
+        //             'user.password': 0,
+        //             'user.payment': 0,
+        //         },
+        //     });
+
+        //     const options = {
+        //         page: page,
+        //         limit: limit,
+        //     };
+
+        //     const aggregatePayment = await Payment.aggregatePaginate(pipeline, options);
+        //     return res.status(200).json(aggregatePayment);
+
+        //     const results = await Payment.aggregatePaginate(aggregatePayment, options);
+
+        //     return res.status(200).json(results);
+        // } catch (error) {
+        //     console.log(error);
+        //     next(error);
+        // }
+    }
+
     async AddPayment(req, res) {
         try {
             const { _id } = req.payload;
@@ -189,18 +340,24 @@ class AdminController {
                 });
             }
             const user = await User.findById(id);
-            console.log(user);
             if (!user) {
                 return res.status(402).json({
                     message: 'User is not found',
                 });
+            }
+            if (user.role === 'admin') {
+                if (user._id.toString() !== _id.toString()) {
+                    return res.status(400).json({
+                        message: "You can't add payment for this user",
+                    });
+                }
             }
             if (user.payment) {
                 return res.status(402).json({
                     message: 'User is already exist a payment',
                 });
             }
-            const newPayment = new Payment(paymentField);
+            const newPayment = new Payment({ ...paymentField, userId: id });
             const savePayment = await newPayment.save();
             const paymentId = savePayment._id;
 
