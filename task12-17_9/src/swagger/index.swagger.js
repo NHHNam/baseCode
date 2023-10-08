@@ -180,26 +180,16 @@
  */
 
 /**
- * @swagger
+ * @openapi
  * /admin/post:
  *  post:
  *      description: responses
  *      tags:
  *      - admin
- *      parameters:
- *      - in: header
- *        name: Authorization
- *        type: string
- *        required: true
- *        description: token for authentication
- *      - in: formData
- *        required: true
- *        name: fileUpload
- *        type: file
- *        description: The file to upload
- *        requestBody:
+ *      requestBody:
+ *          required: true
  *          content:
- *            application/json:
+ *            multipart/form-data:
  *              schema:
  *                type: object
  *                properties:
@@ -207,6 +197,9 @@
  *                    type: string
  *                  description:
  *                    type: string
+ *                  fileUpload:
+ *                    type: file
+ *
  *      responses:
  *          200:
  *              description: success

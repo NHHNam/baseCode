@@ -2,7 +2,7 @@ import JWT from 'jsonwebtoken';
 import User from '../models/user.model.js';
 
 export const verifyAdmin = (req, res, next) => {
-    const token = req.headers['authorization'];
+    const token = req.headers['authorization'].split(' ')[1];
     if (!token) {
         return res.status(401).json({
             message: 'Unauthorized',
@@ -60,7 +60,7 @@ export const verifyRefreshToken = (token) => {
 };
 
 export const verifyUser = (req, res, next) => {
-    const token = req.headers['authorization'];
+    const token = req.headers['authorization'].split(' ')[1];
     if (!token) {
         return res.status(401).json({
             message: 'Unauthorized',
