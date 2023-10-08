@@ -7,13 +7,16 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const paymentRoute = require("./routes/payment");
 const postRoute = require('./routes/post');
+const chatRoute = require("./routes/chat");
 const connect = require("./connection/connect");
 const swaggerJSDoc = require('swagger-jsdoc');
 const options = require("./swagger/configSwagger");
+const app = express();
+//socket
+const http = require('http').createServer(app);
 
 
 dotenv.config();
-const app = express();
 
 //Use swagger
 const specs = swaggerJSDoc(options);
@@ -35,7 +38,23 @@ app.use("/v1/payment", paymentRoute);
 //Route post
 app.use("/v1/post", postRoute);
 
+//Route chat
+app.use("/chat", chatRoute);
+app.use(express.static(__dirname + '/public'))
 
-app.listen(8000, () => {
-    console.log("Server is now listening at port 8000");
+
+//Socket 
+const io = require('socket.io')(http)
+io.on('connection', (socket) => {
+    console.log("Connected")
+    socket.on('message', (msg) => {
+        socket.broadcast.emit('message', msg)
+    })
+
+})
+
+const PORT = process.env.PORT || 4000
+
+http.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`)
 });
