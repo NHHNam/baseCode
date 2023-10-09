@@ -40,7 +40,7 @@ app.use("/v1/post", postRoute);
 
 //Route chat
 app.use("/chat", chatRoute);
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/socket'))
 
 
 //Socket 

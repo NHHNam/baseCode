@@ -64,6 +64,7 @@ textarea {
 .incoming {
     background: #8F8BE8;
     color: #fff;
+    margin-right: auto;
 }
 
 .outgoing {
