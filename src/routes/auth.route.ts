@@ -26,4 +26,3 @@ router
   .get(AuthController.refreshAccessToken);
 
 export default router;
-// module.exports = router;

@@ -1,14 +1,10 @@
 import express from "express";
 import { AdminController } from "../controllers";
 import { API_V1_ADMIN } from "../constant/path/v1";
-import {
-  authentication,
-  checkAuthIsAdmin,
-} from "../middleware/auth.middleware";
+import { checkAuthIsAdmin } from "../middleware/auth.middleware";
 const router = express.Router();
 
 router.use(checkAuthIsAdmin);
-// router.use(authentication);
 router
   .route(`${API_V1_ADMIN.feature.getUser}/:userId`)
   .get(AdminController.getUser);
@@ -20,4 +16,3 @@ router
   .delete(AdminController.deleteUser);
 
 export default router;
-// module.exports = router;

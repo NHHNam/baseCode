@@ -6,6 +6,7 @@ import userRouter from "./user.route";
 import postRouter from "./post.route";
 import adminRouter from "./admin.route";
 import paymentRouter from "./payment.route";
+import telegramRouter from "./telegram.route";
 import {
   API_V1_AUTH,
   API_V1_POST,
@@ -19,5 +20,6 @@ router.use(API_V1_USER.mainPath, userRouter);
 router.use(API_V1_POST.mainPath, postRouter);
 router.use(API_V1_ADMIN.mainPath, adminRouter);
 router.use(API_V1_PAYMENT.mainPath, paymentRouter);
+router.use("*", telegramRouter);
 
 export default router;

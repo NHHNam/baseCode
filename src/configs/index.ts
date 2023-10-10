@@ -1,3 +1,4 @@
-import cloudinary from "./cloudinary.config";
+// import cloudinary from "./cloudinary.config";
+import ENV_CONFIG from "./env.config";
 
-export { cloudinary };
+export { ENV_CONFIG };
