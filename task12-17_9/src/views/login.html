@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <form action="" id="login-form">
+            <input type="text" name="userName" id="userName" />
+            <input type="password" name="password" id="password" />
+            <input type="submit" value="Đăng nhập" />
+        </form>
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
+    <script>
+        const loginForm = document.querySelector('#login-form');
+        const userName = document.querySelector('#userName');
+        const password = document.querySelector('#password');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            axios
+                .post('http://localhost:3000/user/login', { userName: userName.value, password: password.value })
+                .then((response) => {
+                    const data = response.data;
+                    if (response.status === 200) {
+                        localStorage.setItem('token', data.accessToken);
+                        const token = localStorage.getItem('token');
+                        axios
+                            .get('http://localhost:3000/chat-real-time-socket.io', {
+                                headers: {
+                                    Authorization: token,
+                                },
+                            })
+                            .then((response) => {
+                                console.log(response);
+
+                                const chatPage = window.open('', '_blank');
+
+                                chatPage.document.write(response.data);
+
+                                chatPage.document.close();
+                            });
+                    } else {
+                        console.log('login failed');
+                    }
+                });
+        });
+    </script>
+</html>

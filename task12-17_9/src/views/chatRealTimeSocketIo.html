@@ -12,32 +12,48 @@
             <input type="text" id="input-mess" />
             <input id="send-chat" onclick="SendMessage()" value="Gửi" type="button" />
         </form>
+        <div id="user-data" style="display: none">
+            <!-- USER_DATA -->
+        </div>
     </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
+
     <script>
+        const userJSON = document.getElementById('user-data').textContent;
+        const user = JSON.parse(userJSON);
+        console.log(user);
         const socket = io('http://localhost:3000');
-        const name = prompt('Tên của bạn là gì?');
+        const name = 'Name';
+        const roomId = prompt('Nhập room id');
         const chatForm = document.querySelector('#chat-form');
         const inputMess = document.querySelector('#input-mess');
         const messages = document.querySelector('#messages');
-
         const SendMessage = () => {
             const message = inputMess.value;
-            socket.emit('message', JSON.stringify({ message, name }));
+            socket.emit(
+                `message_${roomId}`,
+                JSON.stringify({ roomId, message, userId: user._id, fullName: user.fullName }),
+            );
             inputMess.value = '';
         };
+
+        (() => {
+            axios.post('http://localhost:3000/room', { roomId }).then((response) => {
+                console.log(response.data);
+                response.data.map((item) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${item.userId.fullName}: ${item.message}`;
+                    messages.appendChild(li);
+                });
+            });
+        })();
+
         socket.on('send-data', (response) => {
             const data = JSON.parse(response.toString());
             const li = document.createElement('li');
-            li.textContent = `${data.name}: ${data.message}`;
+            li.textContent = `${data.fullName}: ${data.message}`;
             messages.appendChild(li);
         });
-
-        // socket.addEventListener('message', (response) => {
-        //     const data = JSON.parse(response.data.toString());
-        //     const li = document.createElement('li');
-        //     li.textContent = `${data.name}: ${data.message}`;
-        //     messages.appendChild(li);
-        // });
     </script>
 </html>

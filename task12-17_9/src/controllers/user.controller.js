@@ -11,7 +11,6 @@ class UserController {
     async Register(req, res, next) {
         try {
             const { userName, email } = req.body;
-            console.log(userName);
             const userUN = await User.findOne({ userName });
             const userEmail = await User.findOne({ email });
 
