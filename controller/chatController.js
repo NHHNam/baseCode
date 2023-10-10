@@ -1,5 +1,4 @@
 const path = require('path');
-
 const chatController = {
     chat: async(req, res) => {
         try {

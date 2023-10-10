@@ -7,9 +7,12 @@ router.get("/getPayment", (req, res) => {
     // Gọi middleware verifyTokenAnAuth để kiểm tra quyền truy cập
     middlewareController.verifyTokenAnAuth(req, res, () => {
         const page = req.query.page;
+        //Neu nhap so trang thi hien thi noi dung cua trang do
         if (page) {
             paymentController.getPaymentByPage(req, res, parseInt(page) || 1);
-        } else {
+        }
+        //khong nhap thi hien thi tat ca Payment
+        else {
             paymentController.getAllPayment(req, res);
         }
     }, () => {

@@ -11,6 +11,7 @@ const chatRoute = require("./routes/chat");
 const connect = require("./connection/connect");
 const swaggerJSDoc = require('swagger-jsdoc');
 const options = require("./swagger/configSwagger");
+const botTelegram = require("./telegram_bot/config");
 const app = express();
 //socket
 const http = require('http').createServer(app);
@@ -39,7 +40,7 @@ app.use("/v1/payment", paymentRoute);
 app.use("/v1/post", postRoute);
 
 //Route chat
-app.use("/chat", chatRoute);
+app.use("/v1/chat", chatRoute);
 app.use(express.static(__dirname + '/socket'))
 
 

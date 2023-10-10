@@ -6,9 +6,12 @@ const router = require("express").Router();
 //Route get User
 router.get("/getUser", middlewareController.verifyTokenAnAuth, (req, res) => {
     const page = req.query.page;
+    //Neu nhap pae thi hien thi noi dung cho trang đo,
     if (page) {
         userController.getUserByPage(req, res, parseInt(page) || 1);
-    } else {
+    }
+    //Neu khong nhap thi hien thi tat ca User
+    else {
         userController.getAllUser(req, res);
     }
 });

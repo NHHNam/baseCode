@@ -6,9 +6,12 @@ const router = require("express").Router();
 //Route get post
 router.get("/getPost", (req, res) => {
     const page = req.query.page;
+    //Neu nhap trang thi hien thi noi dung trang do
     if (page) {
         postController.getPostByPage(req, res, parseInt(page) || 1);
-    } else {
+    }
+    //Khong nhap trang thi hien thi tat ca Post
+    else {
         postController.getAllPost(req, res);
     }
 });

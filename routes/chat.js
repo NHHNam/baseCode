@@ -1,5 +1,6 @@
 const chatController = require("../controller/chatController");
-
 const router = require("express").Router();
-router.get("/", chatController.chat);
+
+//Route Real-time chat service
+router.post("/", chatController.chat);
 module.exports = router;

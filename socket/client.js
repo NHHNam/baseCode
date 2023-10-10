@@ -14,17 +14,15 @@ textarea.addEventListener('keyup', (e) => {
 
 function sendMessage(message) {
     let msg = {
-            user: name,
-            message: message.trim()
-        }
-        // Append 
+        user: name,
+        message: message.trim()
+    }
+    mss = message;
+    // Append 
     appendMessage(msg, 'outgoing')
-    textarea.value = ''
-    scrollToBottom()
-
+    textarea.value = '';
     // Send to server 
-    socket.emit('message', msg)
-
+    socket.emit('message', msg);
 }
 
 function appendMessage(msg, type) {
