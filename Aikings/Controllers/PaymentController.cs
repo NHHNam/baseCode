@@ -18,7 +18,7 @@ namespace Aikings.Controllers
             _paymentRepository = paymentRepository;
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet("GetAllPayments")]
         public async Task<ActionResult> GetAllPayments()
         {
@@ -62,7 +62,7 @@ namespace Aikings.Controllers
             return Ok();
         }
 
-        [Authorize]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("DeleteBy{id}")]
         public async Task<IActionResult> DeletePayment(int id)
         {
