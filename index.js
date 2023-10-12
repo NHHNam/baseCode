@@ -12,11 +12,10 @@ const connect = require("./connection/connect");
 const swaggerJSDoc = require('swagger-jsdoc');
 const options = require("./swagger/configSwagger");
 const botTelegram = require("./telegram_bot/config");
+//const message = require("./firebase/config");
 const app = express();
 //socket
 const http = require('http').createServer(app);
-
-
 dotenv.config();
 
 //Use swagger
@@ -42,7 +41,6 @@ app.use("/v1/post", postRoute);
 //Route chat
 app.use("/v1/chat", chatRoute);
 app.use(express.static(__dirname + '/socket'))
-
 
 //Socket 
 const io = require('socket.io')(http)

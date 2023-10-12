@@ -12,6 +12,7 @@
         "esm": "^3.2.25",
         "express": "^4.18.2",
         "express-async-handler": "^1.2.0",
+        "firebase": "^8.10.1",
         "generate-password": "^1.7.0",
         "jsonwebtoken": "^9.0.2",
         "mongodb": "^4.17.1",

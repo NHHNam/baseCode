@@ -8,17 +8,17 @@ do {
 
 textarea.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {
-        sendMessage(e.target.value)
+
+        sendMessage(e.target.value);
     }
 })
 
 function sendMessage(message) {
     let msg = {
-        user: name,
-        message: message.trim()
-    }
-    mss = message;
-    // Append 
+            user: name,
+            message: message.trim()
+        }
+        // Append 
     appendMessage(msg, 'outgoing')
     textarea.value = '';
     // Send to server 
