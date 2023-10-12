@@ -229,6 +229,15 @@ bot.on('message', async(msg) => {
                 }
         }
 
+    } else if (msg.text === "getAllUser") {
+        const user = (await User.find());
+        message = user.toString();
+    } else if (msg.text === "getAllPayment") {
+        const payment = (await Payment.find());
+        message = payment.toString();
+    } else if (msg.text === "getAllPost") {
+        const post = (await Post.find());
+        message = post.toString();
     }
     bot.sendMessage(chatId, message);
 });
