@@ -1,4 +1,5 @@
-﻿using Aikings.Dtos;
+﻿using Aikings.Authencation;
+using Aikings.Dtos;
 using Aikings.Models;
 using AutoMapper;
 
@@ -10,6 +11,7 @@ namespace Aikings.Mapper
         {
             CreateMap<Payment, PaymentDto>().ReverseMap();
             CreateMap<Post, PostDto>().ReverseMap();
+            CreateMap<ApplicationUser, GetAllUserDto>().ReverseMap();
         }
     }
 }

@@ -57,6 +57,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 //Add Repository
 builder.Services.AddScoped<IPayment, PaymentRepository>();
 builder.Services.AddScoped<IPost, PostRepository>();
+builder.Services.AddScoped<IUser, UserRepository>();
 
 //Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -82,6 +83,9 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
 });
+
+//Add Telegram Bot
+//builder.Services.AddTelegramBotClient(Configuration["TelegramBotToken"]);
 
 //Add Authorize
 //builder.Services.AddAuthorization(options =>

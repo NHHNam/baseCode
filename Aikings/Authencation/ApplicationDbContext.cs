@@ -13,6 +13,7 @@ namespace Aikings.Authencation
         }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

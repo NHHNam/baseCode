@@ -93,3 +93,5 @@ C:\Users\phong\Documents\Aiking\Aikings\Aikings\obj\Debug\net6.0\Aikings.genrunt
 C:\Users\phong\Documents\Aiking\Aikings\Aikings\obj\Debug\net6.0\ref\Aikings.dll
 C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\AutoMapper.dll
 C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Telegram.Bot.dll
