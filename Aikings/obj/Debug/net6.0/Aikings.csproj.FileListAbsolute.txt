@@ -95,3 +95,9 @@ C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\AutoMapper.dll
 C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Newtonsoft.Json.dll
 C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Telegram.Bot.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\MailKit.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\MimeKit.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\NETCore.MailKit.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\BouncyCastle.Crypto.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\SendGrid.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\StarkbankEcdsa.dll

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SendGrid.Helpers.Mail;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,6 +59,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IPayment, PaymentRepository>();
 builder.Services.AddScoped<IPost, PostRepository>();
 builder.Services.AddScoped<IUser, UserRepository>();
+
 
 //Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

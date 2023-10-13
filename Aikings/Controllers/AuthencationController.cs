@@ -102,44 +102,51 @@ namespace Aikings.Controllers
             var user = await userManager.FindByNameAsync(model.Username);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
-                var userRoles= await userManager.GetRolesAsync(user);
+                if (user.LockoutEnabled == true)
+                {
+                    var userRoles = await userManager.GetRolesAsync(user);
 
-                var authClaims = new List<Claim>
+                    var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
-                foreach (var userRole in userRoles)
+                    foreach (var userRole in userRoles)
+                    {
+                        authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    }
+                    var secret = configuration["JWT:Secret"];
+                    if (string.IsNullOrEmpty(secret))
+                    {
+                        // Handle the case where the JWT secret is missing or empty.
+                        return BadRequest("JWT secret is missing or empty.");
+                    }
+
+                    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+
+                    //var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
+
+                    var token = new JwtSecurityToken
+                    (
+                        issuer: configuration["JWT:ValidIssuer"],
+                        audience: configuration["JWT:ValidAudience"],
+                        expires: DateTime.Now.AddMinutes(30),
+                        claims: authClaims,
+                        signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512Signature)
+                    );
+
+                    return Ok(new
+                    {
+                        token = new JwtSecurityTokenHandler().WriteToken(token),
+                        expiration = token.ValidTo,
+                        User = user.UserName
+                    });
+                } 
+                else
                 {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                    return BadRequest("Account is locked.");
                 }
-                var secret = configuration["JWT:Secret"];
-                if (string.IsNullOrEmpty(secret))
-                {
-                    // Handle the case where the JWT secret is missing or empty.
-                    return BadRequest("JWT secret is missing or empty.");
-                }
-
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
-
-                //var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
-
-                var token = new JwtSecurityToken
-                (
-                    issuer: configuration["JWT:ValidIssuer"],
-                    audience: configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddMinutes(30),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha512Signature)
-                );
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo,
-                    User = user.UserName
-                });
             }
             return Unauthorized();
         }

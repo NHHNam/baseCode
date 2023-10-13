@@ -12,6 +12,8 @@ namespace Aikings.Mapper
             CreateMap<Payment, PaymentDto>().ReverseMap();
             CreateMap<Post, PostDto>().ReverseMap();
             CreateMap<ApplicationUser, GetAllUserDto>().ReverseMap();
+            CreateMap<ApplicationUser, LockUserDto>().ReverseMap();
+            CreateMap<ApplicationUser, ChangePasswordDto>().ReverseMap();
         }
     }
 }
