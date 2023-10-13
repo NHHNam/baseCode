@@ -20,6 +20,6 @@ router.use(API_V1_USER.mainPath, userRouter);
 router.use(API_V1_POST.mainPath, postRouter);
 router.use(API_V1_ADMIN.mainPath, adminRouter);
 router.use(API_V1_PAYMENT.mainPath, paymentRouter);
-router.use("*", telegramRouter);
+router.use(`/webhook`, telegramRouter);
 
 export default router;

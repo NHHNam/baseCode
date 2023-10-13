@@ -9,7 +9,7 @@ const ENV_CONFIG = {
   MONGO_URI: process.env.MONGO_URI || "",
   TELEGRAM_TOKEN: process.env.TELEGRAM_TOKEN || "",
   TELEGRAM_URL: process.env.TELEGRAM_URL || "https://api.telegram.org/bot",
-  SERVER_URL: process.env.SERVER_URL || "https://4f2b-171-239-2-184.ngrok-free.app",
+  SERVER_URL: process.env.SERVER_URL || "https://0ce5-27-65-225-94.ngrok-free.app",
 };
 
 export default ENV_CONFIG;
