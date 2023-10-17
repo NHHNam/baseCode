@@ -8,6 +8,7 @@ const randomPassword = require("../utils/randomPassword");
 const Redis = require("../utils/redis");
 const Mail = require("nodemailer/lib/mailer");
 const PAGE_SIZE = 2;
+const logEvent = require("../helper/logEvent");
 
 const userController = {
     //Get Page
@@ -17,9 +18,10 @@ const userController = {
             const users = await User.find()
                 .skip(skip)
                 .limit(PAGE_SIZE);
-
+            logEvent(`${req.url}-------${req.method}-------"Get Page User Succesfully"`);
             res.status(200).json(users);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Get Page User"`);
             res.status(500).json(err)
         }
     },
@@ -28,9 +30,11 @@ const userController = {
     getAllUser: async(req, res) => {
         try {
             const user = await User.find();
+            logEvent(`${req.url}-------${req.method}-------"Get User Succesfully"`);
             res.status(200).json(user);
 
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Get User"`);
             res.status(500).json(err)
         }
     },
@@ -51,10 +55,13 @@ const userController = {
                 }, { new: true }
             );
             if (!updatedUser) {
+                logEvent(`${req.url}-------${req.method}-------"User not found"`);
                 return res.status(404).json("User not found");
             }
+            logEvent(`${req.url}-------${req.method}-------"Update User Succesfully"`);
             res.status(200).json(updatedUser);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Update User"`);
             res.status(500).json(err);
         }
     },
@@ -71,10 +78,13 @@ const userController = {
                 }, { new: true }
             );
             if (!updateRoledUser) {
+                logEvent(`${req.url}-------${req.method}-------"User not found"`);
                 return res.status(404).json("User not found");
             }
+            logEvent(`${req.url}-------${req.method}-------"Update Role Succesfully"`);
             res.status(200).json(updateRoledUser);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Update Role User"`);
             res.status(500).json(err);
         }
     },
@@ -95,14 +105,18 @@ const userController = {
                 }, { new: true }
             );
             if (!lockUser) {
+                logEvent(`${req.url}-------${req.method}-------"User not found"`);
                 return res.status(404).json("User not found");
             }
             if (!lockUser.lock) {
+                logEvent(`${req.url}-------${req.method}-------"User Unlocked"`);
                 res.status(200).json(" User Unlocked");
             } else {
+                logEvent(`${req.url}-------${req.method}-------"User Locked"`);
                 res.status(403).json(" User Locked");
             }
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Lock User"`);
             res.status(500).json(err);
         }
     },
@@ -115,12 +129,14 @@ const userController = {
             const newPassword = req.body.newPassword;
 
             if (!newPassword) {
+                logEvent(`${req.url}-------${req.method}-------"New password is required"`);
                 return res.status(400).json({ error: "New password is required" });
             }
 
             const user = await User.findById(userId);
 
             if (!user) {
+                logEvent(`${req.url}-------${req.method}-------"User not found"`);
                 return res.status(404).json({ error: "User not found" });
             }
 
@@ -137,12 +153,14 @@ const userController = {
                         }
                     }, { new: true }
                 );
+                logEvent(`${req.url}-------${req.method}-------"Change Password Successfully"`);
                 res.status(200).json(changPassword);
             } else {
-
+                logEvent(`${req.url}-------${req.method}-------"Old password is incorrect"`);
                 res.status(401).json({ error: "Old password is incorrect" });
             }
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Change Password User"`);
             res.status(500).json(err);
         }
     },
@@ -155,6 +173,7 @@ const userController = {
 
             //Check email
             if (!(user.email.includes(req.body.email))) {
+                logEvent(`${req.url}-------${req.method}-------"Email not found"`);
                 return res.status(404).json({ error: "Email not found" });
             }
             const password = randomPassword();
@@ -171,8 +190,10 @@ const userController = {
                     }
                 }, { new: true }
             );
+            logEvent(`${req.url}-------${req.method}-------"Refresh Password Successfully"`);
             res.status(200).json("Send Password Successfully");
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Refresh Password User"`);
             res.status(500).json(err);
         }
     },
@@ -184,6 +205,7 @@ const userController = {
             const email = req.body.email;
             const user = await User.findById(userId);
             if (!(user.email.includes(req.body.email))) {
+                logEvent(`${req.url}-------${req.method}-------"Email not found"`);
                 return res.status(404).json({ error: "Email not found" });
             }
             const OTP = generateOTP();
@@ -195,11 +217,13 @@ const userController = {
 
                     //Send Email
                     const rs = await sendMail(email, `OTP: ${OTP} \nLưu ý: Mã OTP có hết hiệu lực trong vòng 3 phút`, "OTP CODE");
+                    logEvent(`${req.url}-------${req.method}-------"Send OTP Successfully"`);
                     res.status(200).json("Send OTP Successfully");
                 }
             });
 
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Forgot Password User"`);
             res.status(500).json(err)
         }
     },
@@ -215,6 +239,7 @@ const userController = {
 
             //Check email
             if (!(user.email.includes(email))) {
+                logEvent(`${req.url}-------${req.method}-------"Email not found"`);
                 return res.status(404).json({ error: "Email not found" });
             }
 
@@ -237,15 +262,17 @@ const userController = {
                                 }
                             }, { new: true }
                         );
-
+                        logEvent(`${req.url}-------${req.method}-------"Verify OTP Successfully"`);
                         res.status(200).json(savePassword);
                     } else {
+                        logEvent(`${req.url}-------${req.method}-------"Invalid OTP"`);
                         res.status(404).json("Invalid OTP");
                     }
                 }
 
             });
         } catch (error) {
+            logEvent(`${req.url}-------${req.method}-------"Error Verify OTP And New Password for User"`);
             res.status(500).json(error);
         }
     },
@@ -254,8 +281,10 @@ const userController = {
     searchByUsername: async(req, res) => {
         try {
             const result = await User.find({ username: req.params.username });
+            logEvent(`${req.url}-------${req.method}-------"Search By Username Successfully"`);
             res.status(200).json(result);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------" Error Search By Username"`);
             res.status(500).json(err);
         }
     },
@@ -264,8 +293,10 @@ const userController = {
     searchByFullname: async(req, res) => {
         try {
             const result = await User.find({ fullName: req.params.fullName });
+            logEvent(`${req.url}-------${req.method}-------"Search By Full Name Successfully"`);
             res.status(200).json(result);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------" Error Search By Full Name"`);
             res.status(500).json(err);
         }
     },
@@ -274,8 +305,10 @@ const userController = {
     searchByPoint: async(req, res) => {
         try {
             const result = await User.find({ point: req.params.point });
+            logEvent(`${req.url}-------${req.method}-------"Search By Point Successfully"`);
             res.status(200).json(result);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------" Error Search By Point"`);
             res.status(500).json(err);
         }
     },
@@ -283,8 +316,10 @@ const userController = {
     searchByRole: async(req, res) => {
         try {
             const result = await User.find({ role: req.params.role });
+            logEvent(`${req.url}-------${req.method}-------"Search By Role Successfully"`);
             res.status(200).json(result);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------" Error Search By Role"`);
             res.status(500).json(err);
         }
     },
@@ -292,8 +327,10 @@ const userController = {
     searchByEmail: async(req, res) => {
         try {
             const result = await User.find({ email: req.params.email });
+            logEvent(`${req.url}-------${req.method}-------"Search By Email Successfully"`);
             res.status(200).json(result);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------" Error Search By Email"`);
             res.status(500).json(err);
         }
     }

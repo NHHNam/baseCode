@@ -11,7 +11,7 @@ const chatRoute = require("./routes/chat");
 const connect = require("./connection/connect");
 const swaggerJSDoc = require('swagger-jsdoc');
 const options = require("./swagger/configSwagger");
-const botTelegram = require("./telegram_bot/config");
+//const botTelegram = require("./telegram_bot/config");
 //const message = require("./firebase/config");
 const app = express();
 //socket
@@ -51,7 +51,6 @@ io.on('connection', (socket) => {
     })
 
 })
-
 const PORT = process.env.PORT || 4000
 
 http.listen(PORT, () => {

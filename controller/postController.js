@@ -1,5 +1,6 @@
 const Post = require("../model/Post");
 const PAGE_SIZE = 2;
+const logEvent = require("../helper/logEvent");
 
 const postController = {
     //Get Page
@@ -9,9 +10,10 @@ const postController = {
             const posts = await Post.find()
                 .skip(skip)
                 .limit(PAGE_SIZE);
-
+            logEvent(`${req.url}-------${req.method}-------"Get Page Post Successfully"`);
             res.status(200).json(posts);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Get Page Post "`);
             res.status(500).json(err)
         }
     },
@@ -20,9 +22,11 @@ const postController = {
     getAllPost: async(req, res) => {
         try {
             const posts = await Post.find();
+            logEvent(`${req.url}-------${req.method}-------"Get Post Successfully"`);
             res.status(200).json(posts);
 
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Get Post "`);
             res.status(500).json(err)
         }
     },
@@ -37,8 +41,10 @@ const postController = {
                 thumNail: req.body.thumNail,
             });
             const post = await newPost.save();
+            logEvent(`${req.url}-------${req.method}-------"Add Post Successfully"`);
             res.status(200).json(post);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Add Post "`);
             res.status(500).json(err);
         }
     },
@@ -57,11 +63,14 @@ const postController = {
                 }, { new: true }
             );
             if (!updatedPost) {
+                logEvent(`${req.url}-------${req.method}-------"Post not found"`);
                 return res.status(404).json("Post not found");
             }
+            logEvent(`${req.url}-------${req.method}-------"Update Post Successfully"`);
             res.status(200).json(updatedPost);
 
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Update Post "`);
             res.status(500).json(err);
         }
     },
@@ -71,11 +80,14 @@ const postController = {
         try {
             const deletedPost = await Post.deleteOne({ _id: req.params.id });
             if (deletedPost.deletedCount === 1) {
+                logEvent(`${req.url}-------${req.method}-------"Delete Post Successfully"`);
                 res.status(200).json({ message: "Post deleted successfully" });
             } else {
+                logEvent(`${req.url}-------${req.method}-------"Post not found"`);
                 res.status(404).json({ error: "Post not found" });
             }
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Delete Post "`);
             res.status(500).json(err);
         }
     },
@@ -94,10 +106,13 @@ const postController = {
                 }, { new: true }
             );
             if (!addThumnail) {
+                logEvent(`${req.url}-------${req.method}-------"Post not found"`);
                 return res.status(404).json("Post not found");
             }
+            logEvent(`${req.url}-------${req.method}-------"Add Thumnail Successfully"`);
             res.status(200).json(addThumnail);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Add ThunNail"`);
             res.status(500).json(err);
 
         }
@@ -107,8 +122,10 @@ const postController = {
     searchByTitle: async(req, res) => {
         try {
             const result = await Post.find({ title: { $regex: req.params.title, $options: 'i' } });
+            logEvent(`${req.url}-------${req.method}-------"Search Post By Title Successfully"`);
             res.status(200).json(result);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Search Post By Title"`);
             res.status(500).json(err);
         }
     },
@@ -117,8 +134,10 @@ const postController = {
     searchByDescription: async(req, res) => {
         try {
             const result = await Post.find({ description: { $regex: req.params.description, $options: 'i' } });
+            logEvent(`${req.url}-------${req.method}-------"Search Post By Description Successfully"`);
             res.status(200).json(result);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Search Post By Description"`);
             res.status(500).json(err);
         }
     }

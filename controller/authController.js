@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const userController = require("./userController");
-
+const logEvent = require("../helper/logEvent");
 
 let refreshTokens = [];
 let count = 0;
@@ -24,9 +24,10 @@ const authController = {
             });
 
             const user = await newUser.save();
-
+            logEvent(`${req.url}-------${req.method}-------"Register Successfully User"`);
             res.status(200).json(user);
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Regiter User"`);
             res.status(500).json(err);
         }
     },
@@ -63,10 +64,12 @@ const authController = {
 
             const user = await User.findOne({ username: req.body.username });
             if (!user) {
+                logEvent(`${req.url}-------${req.method}-------"Wrong User"`);
                 return res.status(404).json("Wrong username");
             }
             //Check Lock
             if (user.lock) {
+                logEvent(`${req.url}-------${req.method}-------"User Locked"`);
                 return res.status(403).json("User Locked");
             }
             const validPassword = await bcrypt.compare(
@@ -80,7 +83,8 @@ const authController = {
                 if (count > 3) {
                     const block = await userController.lockUser(req, res, true, user.id);
                 } else {
-                    res.status(404).json("Wrong password");
+                    logEvent(`${req.url}-------${req.method}-------"Wrong Password"`);
+                    res.status(500).json("Wrong password");
                 }
             }
             if (user && validPassword) {
@@ -95,10 +99,12 @@ const authController = {
                     sameSite: "strict",
                 });
                 const { password, ...others } = user._doc;
+                logEvent(`${req.url}-------${req.method}-------"Login Successfully"`);
                 return res.status(200).json({...others, accessToken });
             }
 
         } catch (err) {
+            logEvent(`${req.url}-------${req.method}-------"Error Login User"`);
             return res.status(500).json(err);
         }
     },
@@ -134,6 +140,7 @@ const authController = {
     userLogout: async(req, res) => {
         res.clearCookie("refreshToken");
         refreshTokens = refreshTokens.filter(token => token !== req.cookies.refreshToken);
+        logEvent(`${req.url}-------${req.method}-------"Logout Successfully"`);
         res.status(200).json("Log out");
     }
 
