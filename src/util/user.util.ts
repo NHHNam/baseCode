@@ -27,7 +27,8 @@ export default class UserUtils{
     }
     static refreshPassword = async function(email:string) {
       const refreshPassword = uuidv4()
-      await EmailUtils.sendEmail(email,refreshPassword,"Refresh Password")
+      let a =  await EmailUtils.sendEmail(email,refreshPassword,"Refresh Password")
+      console.log("refresh password " + a)
       return refreshPassword
     }
     static sendOpt = async function name(email:string) {

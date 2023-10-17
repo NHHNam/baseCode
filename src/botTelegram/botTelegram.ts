@@ -161,8 +161,8 @@ export default class BotTelegram {
     }
     static start = (msg:String)=>{
         const introductionMessage = `
-        <div>Hello! I'm Chau.
-        I'm just a little boy with warm heart</div>
+         Hello! I'm Chau.
+        I'm just a little boy with warm heart 
         
         <b>Commands</b>
         /hi - greeting

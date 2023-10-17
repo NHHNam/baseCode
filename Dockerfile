@@ -1,13 +1,11 @@
-FROM node:16-alpine
+FROM node:18
 
-WORKDIR /test/projectweek1
 
-COPY package.json ./
+WORKDIR /home/node/app
 
-RUN npm install typescript
+COPY package*.json ./
+COPY tsconfig.json ./
 
 RUN npm install
-
 COPY . .
-
 CMD npm start

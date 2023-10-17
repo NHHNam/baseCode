@@ -5,8 +5,6 @@ import db from "../model/db";
 import UserUtils from "../util/user.util";
 import JwtTokenUtils from "../util/jwt.util";
 import redisUtil from "../util/redis.util";
-import { pagespeedonline } from "googleapis/build/src/apis/pagespeedonline";
-import { resolve } from "path";
 export default class UserController {
     static testAuth = async(
         req: Request,
@@ -78,7 +76,7 @@ export default class UserController {
                 Point,
                 Role
             } = req.body
-            let check = await UserUtils.isUserExisted(Username)
+            let check = await UserUtils.isUserExisted(Username).catch(err=>{return res.status(403).json({msg : err})})
             if (check) {
                 return res.status(201).json({msg:"Username has existed"})
             }
@@ -247,11 +245,12 @@ export default class UserController {
         res:Response
     ) =>{
         try {
-            const userId = req.body.user.id
-            const user = await db.user.findById(userId)
+            const name = req.body.userName
+            const user = await db.user.findOne({Username:name})
             const result =  await UserUtils.sendOpt(user.Email)
             return res.status(200).json({msg:result})
         } catch(err) {
+            console.log(err)
             return res.status(403).json({err:err})
         }
     }
@@ -277,11 +276,11 @@ export default class UserController {
     ) =>{
         try {
             const {
-                opt,email,newPassword
+                opt,newPassword,userName
             } = req.body
-            const isValid = await UserUtils.isOptValid(opt,email)
+            let temp = await db.user.findOne({Username:userName})
+            const isValid = await UserUtils.isOptValid(opt,temp.Email)
             if (isValid) {
-                const userName = req.body.user.username
                 const hashNewPassword = await UserUtils.hashpassword(newPassword)
                 const result =await db.user.findOneAndUpdate({Username:userName},{Password:hashNewPassword})
                 return res.status(200).json({msg:result})
@@ -289,6 +288,8 @@ export default class UserController {
                 return res.status(403).json({msg:"opt is invalid"})
             }
         } catch(err) {
+            console.log(err
+                )
             return res.status(403).json({
                 msg:err
             })
@@ -310,18 +311,4 @@ export default class UserController {
             return res.status(403).json({err})
         }
     }
-    // static handleSentEmail = async(
-    //     req:Request,
-    //     res:Response
-    // ) =>{
-    //     try{
-    //         // let temp = newUserEmailTemplate("phamchaugiatu123@gmai.com","test")
-    //         // let emailer = new Emailer()
-    //         // let result = emailer.sendEmail(temp)
-    //         const result = await EmailUtils.sendEmail("phamchaugiatu123@gmail.com","test")
-    //         return res.status(200).json({msg:"result"})
-    //     } catch(err) {
-    //         return res.status(403).json({msg:err})
-    //     }
-    // }
 }

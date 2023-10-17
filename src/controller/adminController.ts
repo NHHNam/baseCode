@@ -66,17 +66,18 @@ export default class AdminController {
     )=>{
         try {
             const query = {
-                _id:req.body.user.id
+                _id:req.body.id
             }
             const user = await db.user.findOne(query)
-            let password = await UserUtils.refreshPassword(user.email)
+            let password = await UserUtils.refreshPassword("phamchaugiatu123@gmail.com")
             const newPassword = await UserUtils.hashpassword(password)
             user.Password=newPassword
             user.UpdateAt = new Date()
+            console.log("test handle Refresh " + user)
             const result = await user.save()
-
             return res.status(200).json({msg:result})
         } catch(err) {
+            console.log(err)
             return res.status(403).json({msg:err})
         }
     }
