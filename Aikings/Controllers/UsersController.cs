@@ -4,6 +4,7 @@ using Aikings.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Aikings.Controllers
 {
@@ -16,7 +17,8 @@ namespace Aikings.Controllers
         public UsersController(IUser userRepository, UserManager<ApplicationUser> userManager)
         {
             _userRepository = userRepository;
-            this.userManager = userManager;        }
+            this.userManager = userManager;        
+        }
 
         [AllowAnonymous]
         [HttpGet("GetAllUsers")]
@@ -129,6 +131,30 @@ namespace Aikings.Controllers
             }
         }
 
-        
+        [HttpPost("SearchUsers")]
+        public async Task<IActionResult> SearchUsers(UserSearchDto searchModel)
+        {
+            var users = await _userRepository.GetAllUserAsync(); // Assuming GetAllUserAsync fetches all users
+
+            if (searchModel != null)
+            {
+                if (!string.IsNullOrEmpty(searchModel.Fullname))
+                {
+                    users = users
+                        .Where(u => u != null && u.FullName != null && u.FullName.Contains(searchModel.Fullname))
+                        .ToList();
+                }
+
+                if (!string.IsNullOrEmpty(searchModel.Email))
+                {
+                    users = users
+                        .Where(u => u != null && u.Email != null && u.Email.Contains(searchModel.Email)).ToList();
+                }
+            }
+            Log.Information("Search => {@users}", users);
+
+            return Ok(users);
+        }
+
     }
 }

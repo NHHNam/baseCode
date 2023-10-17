@@ -1,7 +1,5 @@
 ﻿using Aikings.Authencation;
 using Aikings.Dtos;
-using Microsoft.AspNetCore.Identity;
-using Telegram.Bot.Types;
 
 namespace Aikings.Repositories
 {

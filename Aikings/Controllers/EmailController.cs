@@ -24,9 +24,10 @@ namespace Aikings.Controllers
         {
             string newPassword = GenerateRandomPassword();
 
-            var senderEmail = "20520272@gm.uit.edu.vn"; 
+            //Fill email and Password
+            var senderEmail = ""; 
             var senderName = "ABC";              
-            var senderPassword = "1017781747";       
+            var senderPassword = "";       
             var smtpServer = "smtp.gmail.com";   
             var smtpPort = 587;                       
             var enableSsl = true;                   
@@ -133,9 +134,10 @@ namespace Aikings.Controllers
             await userManager.UpdateAsync(user);
 
             // Send the OTP to the user (email)
-            var senderEmail = "20520272@gm.uit.edu.vn";
+            //Fill email and password
+            var senderEmail = "";
             var senderName = "ABC";
-            var senderPassword = "1017781747";
+            var senderPassword = "";
             var smtpServer = "smtp.gmail.com";
             var smtpPort = 587;
             var enableSsl = true;

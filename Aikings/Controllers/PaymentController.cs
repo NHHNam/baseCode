@@ -75,5 +75,34 @@ namespace Aikings.Controllers
             await _paymentRepository.DeletePaymentAsync(id);
             return Ok();
         }
+
+        [HttpPost("SearchPayment")]
+        public async Task<IActionResult> SearchPayments(PaymentSearchDto searchModel)
+        {
+            var users = await _paymentRepository.GetAllPaymentAsync(); // Assuming GetAllUserAsync fetches all users
+
+            if (searchModel != null)
+            {
+                if (!string.IsNullOrEmpty(searchModel.CardId))
+                {
+                    users = users
+                        .Where(u => u != null && u.CardId != null && u.CardId.Contains(searchModel.CardId))
+                        .ToList();
+                }
+
+                if (!string.IsNullOrEmpty(searchModel.NameCard))
+                {
+                    users = users
+                        .Where(u => u != null && u.NameCard != null && u.NameCard.Contains(searchModel.NameCard)).ToList();
+                }
+                if (!string.IsNullOrEmpty(searchModel.FullName))
+                {
+                    users = users
+                        .Where(u => u != null && u.FullName != null && u.FullName.Contains(searchModel.FullName)).ToList();
+                }
+            }
+
+            return Ok(users);
+        }
     }
 }

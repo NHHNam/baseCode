@@ -71,5 +71,29 @@ namespace Aikings.Controllers
             await _postRepository.DeletePostAsync(id);
             return Ok();
         }
+
+        [HttpPost("SearchPost")]
+        public async Task<IActionResult> SearchPosts(PostSearchDto searchModel)
+        {
+            var users = await _postRepository.GetAllPostAsync(); // Assuming GetAllUserAsync fetches all users
+
+            if (searchModel != null)
+            {
+                if (!string.IsNullOrEmpty(searchModel.Title))
+                {
+                    users = users
+                        .Where(u => u != null && u.Title != null && u.Title.Contains(searchModel.Title))
+                        .ToList();
+                }
+
+                if (!string.IsNullOrEmpty(searchModel.Description))
+                {
+                    users = users
+                        .Where(u => u != null && u.Description != null && u.Description.Contains(searchModel.Description)).ToList();
+                }
+            }
+
+            return Ok(users);
+        }
     }
 }
