@@ -16,6 +16,7 @@ import notFoundMid from "./src/middleware/notfound.middleware";
 import errorHandlerMid from "./src/middleware/errorhandler.middleware";
 import routerApi from "./src/routes";
 import "./src/db/connectDb";
+import loggingReq from "./src/middleware/logging.middleware";
 
 app.set("trust proxy", 1);
 app.use(
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 //API Service
+app.use(loggingReq);
 app.use("/", routerApi);
 app.use(errorHandlerMid);
 app.use("/**", notFoundMid);

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
+import { StatusCodes } from "http-status-codes";``
+import logging from "../helper/logging";
 
 const errorHandlerMiddleware = function (
   err: any,
@@ -32,6 +33,16 @@ const errorHandlerMiddleware = function (
     customError.message = `Không tìm thấy item với Id:${err.value}`;
     customError.statusCode = StatusCodes.NOT_FOUND;
   }
+
+  let userInfo: any;
+  if (req.app.locals.user) userInfo = req.app.locals.user;
+  console.log("Logging")
+  logging({
+    message: customError.message,
+    method: req.method,
+    url: req.url,
+    ...userInfo,
+  });
 
   return res.status(customError.statusCode).json({
     status: customError.statusCode,

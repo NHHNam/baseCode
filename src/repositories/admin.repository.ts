@@ -28,6 +28,7 @@ export default class AdminRepository {
       .exec();
   }
   static async deleteUser(userId: string) {
+    
     return await userModel.findByIdAndDelete(userId).lean().exec();
   }
 }
