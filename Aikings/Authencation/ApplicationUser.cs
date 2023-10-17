@@ -8,5 +8,7 @@ namespace Aikings.Authencation
         public double? Point { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string? Thumnail { get; set; }
+        public string? OTP { get; set; }
     }
 }

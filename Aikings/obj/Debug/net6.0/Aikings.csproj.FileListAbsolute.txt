@@ -101,3 +101,13 @@ C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\NETCore.MailKit
 C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\BouncyCastle.Crypto.dll
 C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\SendGrid.dll
 C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\StarkbankEcdsa.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\FirebaseAdminSDK\aiking-8282c-firebase-adminsdk-td5ku-79309f81f8.json
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\FirebaseAdmin.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Google.Api.Gax.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Google.Api.Gax.Rest.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Google.Apis.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Google.Apis.Auth.PlatformServices.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Google.Apis.Auth.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Google.Apis.Core.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Google.Apis.Storage.v1.dll
+C:\Users\phong\Documents\Aiking\Aikings\Aikings\bin\Debug\net6.0\Google.Cloud.Storage.V1.dll

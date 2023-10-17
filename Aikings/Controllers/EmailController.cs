@@ -22,16 +22,26 @@ namespace Aikings.Controllers
         [HttpPost("RefreshPassword")]
         public async Task<IActionResult> SendEmail(string userEmail)
         {
-            //Tạo mail ảo, test trên ethereal.email
-            var fromAddress = new MailAddress("stefanie.lindgren@ethereal.email", "Stefanie Lindgren");
-            var toAddress = new MailAddress(userEmail, "Recipient Name");
             string newPassword = GenerateRandomPassword();
+
+            var senderEmail = "20520272@gm.uit.edu.vn"; 
+            var senderName = "ABC";              
+            var senderPassword = "1017781747";       
+            var smtpServer = "smtp.gmail.com";   
+            var smtpPort = 587;                       
+            var enableSsl = true;                   
+
+            // Create sender's email address
+            var fromAddress = new MailAddress(senderEmail, senderName);
+            var toAddress = new MailAddress(userEmail, "Recipient Name");
+
+            // Create an SMTP client with your email settings
             var smtpClient = new SmtpClient
             {
-                Host = "smtp.ethereal.email", // Replace with your SMTP server's address
-                Port = 587, // Replace with the SMTP server's port
-                Credentials = new NetworkCredential("stefanie.lindgren@ethereal.email", "3Vgrzhzzh1ruEsxb2B"), // Replace with your SMTP email and password
-                EnableSsl = true, // Use SSL if required by your SMTP server
+                Host = smtpServer,
+                Port = smtpPort,
+                Credentials = new NetworkCredential(senderEmail, senderPassword),
+                EnableSsl = enableSsl,
             };
 
             var mailMessage = new MailMessage(fromAddress, toAddress)
@@ -96,5 +106,91 @@ namespace Aikings.Controllers
 
             return new string(password);
         }
+
+        private string GenerateOTP()
+        {
+            const string chars = "0123456789";
+            var random = new Random();
+            var otp = new string(Enumerable.Repeat(chars, 6)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+            return otp;
+        }
+
+        [HttpPost("SendOTP")]
+        public async Task<IActionResult> SendOTP(string userEmail)
+        {
+            var user = await userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var otp = GenerateOTP();
+
+            // Store the OTP in the database
+            user.OTP = otp;
+            await userManager.UpdateAsync(user);
+
+            // Send the OTP to the user (email)
+            var senderEmail = "20520272@gm.uit.edu.vn";
+            var senderName = "ABC";
+            var senderPassword = "1017781747";
+            var smtpServer = "smtp.gmail.com";
+            var smtpPort = 587;
+            var enableSsl = true;
+
+            // Create sender's email address
+            var fromAddress = new MailAddress(senderEmail, senderName);
+            var toAddress = new MailAddress(userEmail, "Recipient Name");
+
+            // Create an SMTP client with your email settings
+            var smtpClient = new SmtpClient
+            {
+                Host = smtpServer,
+                Port = smtpPort,
+                Credentials = new NetworkCredential(senderEmail, senderPassword),
+                EnableSsl = enableSsl,
+            };
+            var mailMessage = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = "OTP Reset Instructions",
+                Body = $"<p>Your OTP is: {otp}</p>",
+                IsBodyHtml = true,
+            };
+            smtpClient.Send(mailMessage);
+            return Ok("OTP sent successfully. Please check your email or phone.");
+        }
+        [HttpPost("VerifyOTPAndResetPassword")]
+        public async Task<IActionResult> VerifyOTPAndResetPassword(string userEmail, string enteredOTP, string newPassword)
+        {
+            var user = await userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            if (user.OTP != enteredOTP)
+            {
+                return BadRequest("Invalid OTP. Please try again.");
+            }
+
+            // Reset the user's password
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await userManager.ResetPasswordAsync(user, token, newPassword);
+
+            if (result.Succeeded)
+            {
+                // Clear the OTP after a successful password reset
+                user.OTP = null;
+                await userManager.UpdateAsync(user);
+                return Ok("Password reset successful.");
+            }
+
+            return BadRequest("Failed to reset the password. Please try again.");
+        }
+
+       
     }
 }

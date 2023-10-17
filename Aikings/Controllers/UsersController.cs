@@ -129,45 +129,6 @@ namespace Aikings.Controllers
             }
         }
 
-        //[AllowAnonymous]
-        //[HttpPost("RefreshPassword")]
-        //public async Task<IActionResult> RefreshPassword(string email)
-        //{
-        //    try
-        //    {
-        //        var user = await userManager.FindByEmailAsync(email);
-        //        if (user == null)
-        //        {
-        //            return NotFound("User not found.");
-        //        }
-
-        //        // Generate a new password (you can use a library or generate it yourself)
-        //        string newPassword = GenerateRandomPassword();
-
-        //        // Send the new password via email
-        //        await emailService.SendPasswordResetEmailAsync(email, newPassword);
-
-        //        // Update the user's password
-        //        var token = await userManager.GeneratePasswordResetTokenAsync(user);
-        //        await userManager.ResetPasswordAsync(user, token, newPassword);
-
-        //        return Ok("Password refreshed successfully. Check your email for the new password.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-        //private string GenerateRandomPassword()
-        //{
-        //    // Implement your own logic to generate a random password
-        //    // Example: Generate a random string with 10 characters
-        //    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&-_";
-        //    var random = new Random();
-        //    var newPassword = new string(Enumerable.Repeat(chars, 10).Select(s => s[random.Next(s.Length)]).ToArray());
-
-        //    return newPassword;
-        //}
+        
     }
 }

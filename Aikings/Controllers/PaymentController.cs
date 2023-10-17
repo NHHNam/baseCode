@@ -18,7 +18,7 @@ namespace Aikings.Controllers
             _paymentRepository = paymentRepository;
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet("GetAllPayments")]
         public async Task<ActionResult> GetAllPayments()
         {
