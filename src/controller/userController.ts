@@ -5,6 +5,7 @@ import db from "../model/db";
 import UserUtils from "../util/user.util";
 import JwtTokenUtils from "../util/jwt.util";
 import redisUtil from "../util/redis.util";
+import logger from '../logger/logger.service'
 export default class UserController {
     static testAuth = async(
         req: Request,
@@ -45,7 +46,10 @@ export default class UserController {
         res: Response
     )=>{
         try {
+
             const {UserName,Password}=req.body
+            logger.http("User " + UserName + " request " + req.baseUrl+""+req.url)
+
             const user = await db.user.findOne({Username:UserName})
             if (user == null) {
                 return res.status(403).json({msg:"This account has not existed"})
@@ -76,6 +80,7 @@ export default class UserController {
                 Point,
                 Role
             } = req.body
+            logger.http("User " + " request " + req.baseUrl+""+req.url)
             let check = await UserUtils.isUserExisted(Username).catch(err=>{return res.status(403).json({msg : err})})
             if (check) {
                 return res.status(201).json({msg:"Username has existed"})

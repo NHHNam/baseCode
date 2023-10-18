@@ -1,6 +1,7 @@
 import JwtTokenUtils from "../util/jwt.util";
 import { NextFunction, Request, Response } from "express";
 import redisUtil from "../util/redis.util"
+import logger from '../logger/logger.service'
 const authMiddleware = async (req:Request, res:Response, next:NextFunction) => {
     const token = req.headers["authorization"];
     if (!token) {
@@ -9,6 +10,7 @@ const authMiddleware = async (req:Request, res:Response, next:NextFunction) => {
   try {
     req.body.user = await JwtTokenUtils.validate(token)
     const id = req.body.user.id
+    logger.http("User " + id + " request " + req.baseUrl+""+req.url)
     const isLock = req.body.user.lock
     const status = await redisUtil.hGet(id,'refreshToken')
     if (status == null || status == "logout") {

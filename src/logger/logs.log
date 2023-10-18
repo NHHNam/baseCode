@@ -1,0 +1,20 @@
+{"level":"info","message":"Server start","timestamp":"2023-10-18T06:22:01.458Z"}
+{"date":"Wed Oct 18 2023 13:22:20 GMT+0700 (Indochina Time)","error":{},"exception":true,"level":"error","message":"uncaughtException: Cannot read properties of undefined (reading 'id')\nTypeError: Cannot read properties of undefined (reading 'id')\n    at UserController.handleSendOpt (D:\\AIking\\projectWeek1\\server\\src\\controller\\userController.ts:283:50)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)","os":{"loadavg":[0,0,0],"uptime":17434.296},"process":{"argv":["D:\\AIking\\projectWeek1\\server\\node_modules\\ts-node\\dist\\bin.js","D:\\AIking\\projectWeek1\\server\\src\\index.ts"],"cwd":"D:\\AIking\\projectWeek1\\server","execPath":"C:\\Program Files\\nodejs\\node.exe","gid":null,"memoryUsage":{"arrayBuffers":20417840,"external":23301108,"heapTotal":1262477312,"heapUsed":1167499864,"rss":801726464},"pid":8576,"uid":null,"version":"v18.17.1"},"stack":"TypeError: Cannot read properties of undefined (reading 'id')\n    at UserController.handleSendOpt (D:\\AIking\\projectWeek1\\server\\src\\controller\\userController.ts:283:50)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)","timestamp":"2023-10-18T06:22:20.611Z","trace":[{"column":50,"file":"D:\\AIking\\projectWeek1\\server\\src\\controller\\userController.ts","function":"UserController.handleSendOpt","line":283,"method":"handleSendOpt","native":false},{"column":5,"file":"node:internal/process/task_queues","function":"processTicksAndRejections","line":95,"method":null,"native":false}]}
+{"level":"info","message":"Server start","timestamp":"2023-10-18T06:24:36.710Z"}
+{"level":"info","message":"User testAdmin1 login fail : wrong password","timestamp":"2023-10-18T06:24:51.800Z"}
+{"level":"info","message":"User testUser22 login successfully","timestamp":"2023-10-18T06:25:20.534Z"}
+{"level":"info","message":"Server start","timestamp":"2023-10-18T06:29:06.252Z"}
+{"level":"info","message":"User testUser22 login successfully","timestamp":"2023-10-18T06:29:19.313Z"}
+{"level":"info","message":"Server start","timestamp":"2023-10-18T06:31:36.639Z"}
+{"level":"http","message":"Admin 652c05c11bd45150ddcf6820 request /refreshPassword","timestamp":"2023-10-18T06:32:40.430Z"}
+{"level":"info","message":"Server start","timestamp":"2023-10-18T06:35:09.768Z"}
+{"level":"info","message":"Server start","timestamp":"2023-10-18T06:43:06.185Z"}
+{"level":"info","message":"Server start","timestamp":"2023-10-18T06:45:01.797Z"}
+{"level":"info","message":"Server start","timestamp":"2023-10-18T06:54:55.023Z"}
+{"level":"info","message":"Server start","timestamp":"2023-10-18T06:58:55.886Z"}
+{"level":"info","message":"Server start","timestamp":"2023-10-18T07:01:43.273Z"}
+{"level":"info","message":"Info message","timestamp":"2023-10-18T07:03:27.723Z"}
+{"level":"error","message":"Error message","timestamp":"2023-10-18T07:03:27.737Z"}
+{"level":"warn","message":"Warning message","timestamp":"2023-10-18T07:03:27.738Z"}
+{"level":"info","message":"Info message","timestamp":"2023-10-18T07:07:18.649Z"}
+{"level":"http","message":"User testAdmin1 request /user/login","timestamp":"2023-10-18T07:07:27.694Z"}
