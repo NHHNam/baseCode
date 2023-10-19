@@ -3,29 +3,15 @@ import cors from 'cors';
 import { WebSocketServer } from 'ws';
 import swaggerUi from 'swagger-ui-express';
 import http from 'http';
+import bodyParser from 'body-parser';
 import swaggerJsDoc from 'swagger-jsdoc';
 import { Server } from 'socket.io';
+import log4js from 'log4js';
 import route from './routes/index.router.js';
 import connectMongoose from './databases/mongoose.int.js';
-import CallSocket from './services/socket.io.js';
+import CallBotTelegram from './services/bot-telegram.service.js';
+import { ChatRealTime } from './services/socket.io.js';
 const app = express();
-const server = http.createServer(app);
-// connect websocket
-const wss = new WebSocketServer({ port: 3001 });
-wss.on('connection', function connection(ws) {
-    ws.on('error', console.error);
-    console.log('A new client connected ws');
-});
-
-// connect socket.io
-const io = new Server(server, { cors: { origin: '*' } });
-CallSocket();
-// cors
-const corOptions = {
-    origin: true,
-    credentials: true,
-};
-app.use(cors(corOptions));
 
 app.use(express.json());
 app.use(
@@ -34,9 +20,38 @@ app.use(
     }),
 );
 
+// logger log4js
+log4js.configure('log4js.json');
+const logger = log4js.getLogger();
+// app.use(log4js.connectLogger(logger.express, { level: 'auto', format: ':status :method :url' }));
+// app.use(log4js.connectLogger(logger));
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// parse application/json
+app.use(bodyParser.json());
+
+// connect websocket
+const wss = new WebSocketServer({ port: 3001 });
+wss.on('connection', function connection(ws) {
+    ws.on('error', console.error);
+    console.log('A new client connected ws');
+});
+
+// call bot telegram
+CallBotTelegram();
+
+// cors
+const corOptions = {
+    origin: true,
+    credentials: true,
+};
+app.use(cors(corOptions));
+
 const options = {
     definition: {
-        openapi: '3.0.1',
+        openapi: '3.0.0',
         info: {
             title: 'api',
             version: '1.0.0',
@@ -45,7 +60,7 @@ const options = {
             securitySchemes: {
                 bearerAuth: {
                     type: 'http',
-                    scheme: 'bearer',
+                    scheme: 'Bearer',
                     bearerFormat: 'JWT',
                 },
             },
@@ -67,6 +82,11 @@ connectMongoose();
 
 // route
 route(app);
+const server = http.createServer(app);
 
+// connect socket.io
+const io = new Server(server, { cors: { origin: '*' } });
 export default server;
-export { wss, io };
+export { wss, io, logger };
+
+ChatRealTime();

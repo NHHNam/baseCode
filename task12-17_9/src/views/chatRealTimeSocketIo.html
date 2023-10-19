@@ -30,11 +30,8 @@
         const inputMess = document.querySelector('#input-mess');
         const messages = document.querySelector('#messages');
         const SendMessage = () => {
-            const message = inputMess.value;
-            socket.emit(
-                `message_${roomId}`,
-                JSON.stringify({ roomId, message, userId: user._id, fullName: user.fullName }),
-            );
+            console.log('roomId', typeof roomId);
+            socket.emit('message', JSON.stringify({ roomId, message, userId: user._id, fullName: user.fullName }));
             inputMess.value = '';
         };
 
@@ -49,7 +46,7 @@
             });
         })();
 
-        socket.on('send-data', (response) => {
+        socket.on(`send-data_${roomId}`, (response) => {
             const data = JSON.parse(response.toString());
             const li = document.createElement('li');
             li.textContent = `${data.fullName}: ${data.message}`;

@@ -33,8 +33,9 @@ export const verifyAdmin = (req, res, next) => {
     });
 };
 
-export const verifyAccessToken = (token) => {
+export const verifyAccessToken = (accessToken) => {
     const keySecret = process.env.KEY_SECRET_TOKEN;
+    const token = accessToken.split(' ')[1];
 
     return new Promise((resolve, reject) => {
         JWT.verify(token, keySecret, (err, payload) => {
@@ -46,8 +47,9 @@ export const verifyAccessToken = (token) => {
     });
 };
 
-export const verifyRefreshToken = (token) => {
+export const verifyRefreshToken = (refreshToken) => {
     const keySecret = process.env.KEY_SECRET_TOKEN;
+    const token = refreshToken.split(' ')[1];
 
     return new Promise((resolve, reject) => {
         JWT.verify(token, keySecret, (err, payload) => {
@@ -60,9 +62,9 @@ export const verifyRefreshToken = (token) => {
 };
 
 export const verifyUser = (req, res, next) => {
-    const token = req.headers['authorization'];
-    // const token = req.headers['authorization'].split(' ')[1];
-
+    console.log(req.headers['authorization']);
+    const token = req.headers['authorization'].split(' ')[1];
+    console.log(token);
     if (!token) {
         return res.status(401).json({
             message: 'Unauthorized',
@@ -75,7 +77,6 @@ export const verifyUser = (req, res, next) => {
                 error: err.message,
             });
         }
-        console.log(payload);
         const id = payload._id;
         const user = await User.findById(id);
         if (!user) {

@@ -1,13 +1,10 @@
-import WebSocket from 'ws';
 import { Types } from 'mongoose';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { wss, io } from '../app.js';
 import User from '../models/user.model.js';
 import Message from '../models/message.model.js';
 
 import fs from 'fs';
-const clients = new Map();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 let roomIdGlobal;
@@ -19,6 +16,7 @@ class SitesController {
             const filePath = join(__dirname, '..', 'views', 'chatRealTimeSocketIo.html');
 
             // Đọc nội dung trang HTML
+
             fs.readFile(filePath, 'utf8', (err, data) => {
                 if (err) {
                     console.error(err);
@@ -36,6 +34,11 @@ class SitesController {
         }
     }
 
+    LoginView(req, res) {
+        const filePath = join(__dirname, '..', 'views', 'login.html');
+        res.sendFile(filePath);
+    }
+
     async Room(req, res) {
         try {
             const { roomId } = req.body;
@@ -45,7 +48,6 @@ class SitesController {
                 });
             }
             roomIdGlobal = roomId;
-
             const options = {
                 sort: {
                     createdAt: -1,
