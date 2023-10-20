@@ -51,7 +51,7 @@ export default class UserController {
             logger.http("User " + UserName + " request " + req.baseUrl+""+req.url)
 
             const user = await db.user.findOne({Username:UserName})
-            if (user == null) {
+            if (user == null) { 
                 return res.status(403).json({msg:"This account has not existed"})
             }
             const isUserValid = await UserUtils.comparePassword(Password,user.Password)
