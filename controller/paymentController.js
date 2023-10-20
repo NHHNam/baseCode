@@ -52,7 +52,6 @@ const paymentController = {
     //Update Payment
     upadtePayment: async(req, res) => {
         try {
-
             const updatedPayment = await Payment.findByIdAndUpdate(
                 req.params.id, {
                     $set: {
