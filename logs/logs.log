@@ -29,3 +29,6 @@
 17-10-2023	 16:39:17 ------- /updateUser/6505189022a0e5336d62548f-------PUT-------"Update User Succesfully" 
 17-10-2023	 16:45:24 ------- /updateUser/6505189022a0e5336d62548-------PUT-------"Error Update User" 
 17-10-2023	 16:45:38 ------- /updateUser/6505189022a0e5336d62548f-------PUT-------"Token is not valid" 
+20-10-2023	 19:14:32 ------- /SearchByTitle/undefined-------GET-------"Search Post By Title Successfully" 
+20-10-2023	 19:14:39 ------- /SearchByTitle/tuyen-------GET-------"Search Post By Title Successfully" 
+20-10-2023	 19:18:53 ------- /getUser?page=0-------GET-------"You're not authenticated " 

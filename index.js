@@ -8,6 +8,7 @@ const userRoute = require("./routes/user");
 const paymentRoute = require("./routes/payment");
 const postRoute = require('./routes/post');
 const chatRoute = require("./routes/chat");
+const elasticRoute = require("./elastic/route");
 const connect = require("./connection/connect");
 const swaggerJSDoc = require('swagger-jsdoc');
 const options = require("./swagger/configSwagger");
@@ -26,6 +27,7 @@ app.use(cors());
 app.use(cookiesParser());
 app.use(express.json());
 
+
 //Route auth
 app.use("/v1/auth", authRoute);
 
@@ -40,6 +42,10 @@ app.use("/v1/post", postRoute);
 
 //Route chat
 app.use("/v1/chat", chatRoute);
+
+//Route elastic
+app.use("/v1/elastic", elasticRoute);
+
 app.use(express.static(__dirname + '/socket'))
 
 //Socket 
