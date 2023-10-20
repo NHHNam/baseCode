@@ -39,10 +39,10 @@ const UserService = {
         }
     },
 
+    //Add User
     addUser: async(req, res) => {
-        const userData = req.body;
-
         try {
+            const userData = req.body;
             // Use the Elasticsearch client to index the user data
             const { body } = await client.index({
                 index: 'user', // Replace with your Elasticsearch index name
@@ -95,7 +95,22 @@ const UserService = {
         }
     },
 
+    //Add Post
+    addPost: async(req, res) => {
+        try {
+            const postData = req.body;
 
+            const { body } = await client.index({
+                index: 'post',
+                body: postData,
+            });
+
+            res.json({ message: 'Post created successfully', elasticsearchResponse: body });
+        } catch (error) {
+            console.error('Error creating post in Elasticsearch:', error);
+            res.status(500).json({ error: 'Failed to create post in Elasticsearch' });
+        }
+    },
     //Get Post by ID
     getPostByID: async(req, res) => {
         const { post, type, id } = req.params;
@@ -244,6 +259,22 @@ const UserService = {
             res.json({ payment: body });
         } catch (error) {
             res.status(500).json({ error: 'Lỗi khi xóa tài liệu' });
+        }
+    },
+    //Add User
+    addPayment: async(req, res) => {
+        try {
+            const paymentData = req.body;
+
+            const { body } = await client.index({
+                index: 'payment',
+                body: paymentData,
+            });
+
+            res.json({ message: 'Payment created successfully', elasticsearchResponse: body });
+        } catch (error) {
+            console.error('Error creating payment in Elasticsearch:', error);
+            res.status(500).json({ error: 'Failed to create payment in Elasticsearch' });
         }
     }
 }
