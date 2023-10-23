@@ -3,6 +3,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import User from '../models/user.model.js';
 import Message from '../models/message.model.js';
+import { search } from '../services/elasticsearch.service.js';
 
 import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
@@ -68,6 +69,13 @@ class SitesController {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    async ElasticsearchPhrase(req, res) {
+        const { index } = req.params;
+        const { query } = req.query;
+        const data = await search(index, query);
+        return res.json(data);
     }
 }
 export { roomIdGlobal };

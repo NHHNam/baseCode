@@ -9,5 +9,6 @@ const router = express.Router();
 router.get('/chat-real-time-socket.io', verifyUser, SitesController.ChatRealTimeSocketIo);
 router.post('/room', SitesController.Room);
 router.get('/view/login', SitesController.LoginView);
+router.get('/search/:index', SitesController.ElasticsearchPhrase);
 
 export default router;

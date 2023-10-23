@@ -519,3 +519,26 @@
  *          200:
  *              description: success
  */
+
+/**
+ * @swagger
+ * /search/{index}:
+ *   get:
+ *     tags:
+ *     - elastic search
+ *     parameters:
+ *       - in: path
+ *         name: index
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Chỉ mục cần tìm kiếm
+ *       - in: query
+ *         name: query
+ *         schema:
+ *           type: string
+ *         description: Tên cần tìm kiếm
+ *     responses:
+ *       '200':
+ *         description: Kết quả tìm kiếm thành công
+ */
