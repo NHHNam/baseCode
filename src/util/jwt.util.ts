@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken'
 import redisUtil from './redis.util';
-const secretKey = 'my-secret-key';
+require('dotenv').config
+const secretKey = process.env.secretKey||"asdsadsadsads";
 const expires = new Date(Date.now() + 1000 * 60 * 60*24*30)
 const expiresRefresh = new Date(Date.now() + 1000 * 60 * 60*24*30*3000)
-const secretKeyRefresh = 'sa6ds4f654a56f4ds56f465ds4f564sadf654ds5';
+const secretKeyRefresh = process.env.secretKeyRefresh ||"dasdsadsa";
 
 export default class JwtTokenUtils {
     static generateToken = async function (Username:string,role:string,id:String,lock:Boolean) {

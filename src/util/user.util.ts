@@ -4,7 +4,7 @@ import EmailUtils from "../util/email.utils";
 import redisUtil from "./redis.util";
 import {v4 as uuidv4} from 'uuid';
 import { rejects } from "assert";
-
+import UserModel from "../model/User.model";
 const salt = 10
 const pageLimits = 5
 

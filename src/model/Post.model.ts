@@ -1,5 +1,7 @@
 import {Schema} from 'mongoose'
 import mongoose  from "mongoose";
+const mongoosastic = require('mongoosastic')
+import clientElasticsearch from '../config/elastic.connect';
 const postSchema = new Schema ({
     UserId:{
         type:String,
@@ -24,5 +26,8 @@ const postSchema = new Schema ({
     Thumbnail:{
       type:String
     }
+})
+postSchema.plugin(mongoosastic,{
+  esClient:clientElasticsearch
 })
 export default mongoose.model("Post", postSchema);

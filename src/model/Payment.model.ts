@@ -1,5 +1,7 @@
 import {Schema} from 'mongoose'
 import mongoose  from "mongoose";
+const mongoosastic = require('mongoosastic')
+import clientElasticsearch from '../config/elastic.connect';
 const paymentSchema = new Schema ({
     UserId:{
       type:Schema.Types.ObjectId,
@@ -25,5 +27,8 @@ const paymentSchema = new Schema ({
         type:Date,
      //   unique:true 
     } 
+})
+paymentSchema.plugin(mongoosastic,{
+  esClient:clientElasticsearch
 })
 export default mongoose.model("Payment", paymentSchema);

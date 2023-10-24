@@ -1,7 +1,8 @@
 import {Schema} from 'mongoose'
 import mongoose  from "mongoose";
 import mongoosePagination from 'mongoose-paginate-v2'
-
+const mongoosastic = require('mongoosastic')
+import clientElasticsearch from '../config/elastic.connect';
 const userSchema = new Schema ({
     Username:{
         type:String,
@@ -45,4 +46,7 @@ const userSchema = new Schema ({
     }
 })
 userSchema.plugin(mongoosePagination)
+userSchema.plugin(mongoosastic,{
+    esClient:clientElasticsearch
+})
 export default mongoose.model("User", userSchema);
