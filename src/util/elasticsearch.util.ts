@@ -1,61 +1,51 @@
-import { assuredworkloads } from 'googleapis/build/src/apis/assuredworkloads'
 import clientElasticsearch from '../config/elastic.connect'
+import UserUtils from './user.util';
 export default class ElasticSearch {
     static connect = async()=> {
-        clientElasticsearch.info().then(console.log("connect to elastic"),console.log)
-         await this.createIndex("user");
+        try {
+            clientElasticsearch.info().then(console.log("connect to elastic"),console.log)
+            // const response = await clientElasticsearch.indices.create({
+            //     index: 'pay',
+            // });
+            // await clientElasticsearch.indices.create({
+            //     index: 'user',
+            // });
+            // await clientElasticsearch.indices.create({
+            //     index: 'post',
+            // });
+            // console.log("elastic search " + JSON.stringify(response))
+            // const response = await clientElasticsearch.cat.indices({
+            // });
+            await this.integrateIndex({
+                Username:"user1010",
+                Password:UserUtils.hashpassword("123"),
+                Payment:"123213"
+            },"user")
+            const b = await this.searchIndex("user",{
+                Username:'user1010'
+            })
+            console.log(b.hits.hits)
+        }catch(err) {
+            console.log(err)
+        }
+        
     }
     static integrateIndex = async(object :any,type:string)=>{
-        let a =  await clientElasticsearch.index({
+        return await clientElasticsearch.index({
             index: type,
-                document: object
+            document: object
         })
-        console.log("elastic search " + JSON.stringify(a))
     }
-    static createIndex = async (indexName:string) => {
-      let body  = {
-        mappings: {
-          properties: {
-            Username:{
-              type:'text',
-              unique:true 
-          },
-          Email:{
-              type:'text',
-          },
-          Payment:{
-              type:'text',
-          },
-          Password:{
-              type:'text',
-          },
-          FullName:{
-              type:'text',
-          },
-          Point:{
-              type:'integer',
-          },
-          Role:{
-              type:'text',
-          },
-          CreatedAt:{
-              type:Date,
-          },
-              type:Date,
-          },
-          isLock:{
-              type:Boolean,
-          }
-          },
-        }
-      let a = await clientElasticsearch.indices.create({ index: indexName ,body});
-      console.log("elastic search index " + JSON.stringify(a))
-    };
+    
     static searchIndex = async(index:any,query:any) =>{
         const result = await clientElasticsearch.search({
             index: index,
-            query: query
-        })
+            body: {
+              query: {
+                match: query,
+              },
+            },
+          });
         return result
-        }
+    }
 }
