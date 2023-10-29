@@ -5,7 +5,8 @@ import db from "../model/db";
 import UserUtils from "../util/user.util";
 import JwtTokenUtils from "../util/jwt.util";
 import redisUtil from "../util/redis.util";
-import logger from '../logger/logger.service'
+import logger from '../logger/logger.service';
+import ElasticSearch from "../util/elasticsearch.util";
 export default class UserController {
     static testAuth = async(
         req: Request,
@@ -46,11 +47,11 @@ export default class UserController {
         res: Response
     )=>{
         try {
-
             const {UserName,Password}=req.body
             logger.http("User " + UserName + " request " + req.baseUrl+""+req.url)
-
             const user = await db.user.findOne({Username:UserName})
+            console.log("handle login test elastic " + user)
+            // let user = await UserUtils.searchService("UserName",{Username:UserName})
             if (user == null) { 
                 return res.status(403).json({msg:"This account has not existed"})
             }
@@ -80,7 +81,6 @@ export default class UserController {
                 Point,
                 Role
             } = req.body
-            logger.http("User " + " request " + req.baseUrl+""+req.url)
             let check = await UserUtils.isUserExisted(Username).catch(err=>{return res.status(403).json({msg : err})})
             if (check) {
                 return res.status(201).json({msg:"Username has existed"})
@@ -99,6 +99,7 @@ export default class UserController {
                 isLock:false
             });
             await newUser.save()
+            await ElasticSearch.integrateIndex(newUser,'user')
             let token = await JwtTokenUtils.generateToken(Username,Role,newUser._id.toString(),false)
             let refreshToken = await JwtTokenUtils.generateRefreshToken(Username,Role,newUser._id.toString())
             return res.status(200).json({token,refreshToken})
@@ -163,6 +164,7 @@ export default class UserController {
                 UpdateAt: new Date(),
             });
             const result = await newPaymnet.save()
+            await ElasticSearch.integrateIndex(result,'payment')
             return res.status(200).json({Payment:result})
         } catch(err) {
             return res.status(200).json({msg:err})
@@ -186,6 +188,8 @@ export default class UserController {
             UpdateAt: new Date()
         }
         const result = await db.pay.findOneAndUpdate(query,updateInfo)
+        await ElasticSearch.integrateIndex(result,'payment')
+
         return res.status(200).json({msg:result})
         } catch(err) {
             return res.status(200).json({msg:err})
@@ -310,6 +314,20 @@ export default class UserController {
                 property,
             } = req.body
             let result = await UserUtils.searchService(property,query)
+            return res.status(200).json({result})
+        } catch(err) {
+            console.log(err)
+            return res.status(403).json({err})
+        }
+    }
+    //handleGetProfile
+    static handleGetProfile = async(
+        req:Request,
+        res:Response
+    )=>{
+        try {
+            let _id = req.body.user.id
+            let result = await db.user.findOne({_id:_id})
             return res.status(200).json({result})
         } catch(err) {
             console.log(err)

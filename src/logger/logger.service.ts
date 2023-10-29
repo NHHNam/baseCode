@@ -11,7 +11,5 @@ const logger = winston.createLogger({
     })
   ],
 });
- 
-logger.info('Info message');
 logger.on('error',(err:any)=>logger.error("Error " + err))
 export default logger

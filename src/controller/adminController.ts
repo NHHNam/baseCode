@@ -5,6 +5,7 @@ import uploadFileToCloudinary from '../util/cloudinary.util'
 import redisUtil from "../util/redis.util";
 import UserUtils from "../util/user.util";
 import Payment from "../model/Payment.model"
+import ElasticSearch from "../util/elasticsearch.util";
 
 export default class AdminController {
     static handleAddPost = async(
@@ -28,6 +29,7 @@ export default class AdminController {
                 UpdateAt: new Date(),
             });
             const result = await newPost.save()
+            await ElasticSearch.integrateIndex(result,'pay')
             return res.status(200).json({Post:result})
         } catch(err) {
             return res.status(200).json({msg:err})
@@ -55,6 +57,7 @@ export default class AdminController {
             UpdateAt: new Date()
         }
         const result = await db.post.findOneAndUpdate(query,updateInfo)
+        await ElasticSearch.integrateIndex(result,'pay')
         return res.status(200).json({msg:result})
         } catch(err) {
             return res.status(200).json({msg:err})
@@ -74,6 +77,7 @@ export default class AdminController {
             user.Password=newPassword
             user.UpdateAt = new Date()
             const result = await user.save()
+            await ElasticSearch.integrateIndex(result,'user')
             return res.status(200).json({msg:result})
         } catch(err) {
             console.log(err)
@@ -106,6 +110,8 @@ export default class AdminController {
                 userID
             } = req.body
             let user = await db.user.findByIdAndUpdate(userID,{isLock:true})
+            await ElasticSearch.integrateIndex(user,'user')
+
             await redisUtil.del(req.body.user.id)
             return res.status(400).json({msg:user})
         } catch (err) {
@@ -132,6 +138,8 @@ export default class AdminController {
                 Thumbnail:secure_url
             }
             const result =  await db.post.findByIdAndUpdate(query,updateInfo).lean()
+            await ElasticSearch.integrateIndex(result,'post')
+
             return res.status(200).json({msg:result})
         } catch(err){
             return res.status(403).json({err})
@@ -157,6 +165,8 @@ export default class AdminController {
                 UpdateAt: new Date(),
             });
             const result = await newPaymnet.save()
+            await ElasticSearch.integrateIndex(result,'pay')
+            
             return res.status(200).json({Payment:result})
         } catch(err) {
             return res.status(200).json({msg:err})
@@ -179,6 +189,7 @@ export default class AdminController {
             UpdateAt: new Date()
         }
         const result = await db.pay.findOneAndUpdate(query,updateInfo)
+        await ElasticSearch.integrateIndex(result,'pay')
         return res.status(200).json({msg:result})
         } catch(err) {
             return res.status(200).json({msg:err})
@@ -210,15 +221,13 @@ export default class AdminController {
             Username,
             Role
         } = req.body
-        // if (user != null && user.username != Username) {
-        //     return res.status(403).json({msg:"You cannot update this user account"})
-        // }
         const query = {Username}
         const updateInfo ={
             Role,
             UpdateAt: new Date()
         }
         const result = await db.user.findOneAndUpdate(query,updateInfo)
+        await ElasticSearch.integrateIndex(result,'user')
         return res.status(200).json({msg:result})
         } catch(err) {
             return res.status(200).json({msg:err})

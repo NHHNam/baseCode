@@ -4,7 +4,7 @@ import EmailUtils from "../util/email.utils";
 import redisUtil from "./redis.util";
 import {v4 as uuidv4} from 'uuid';
 import { rejects } from "assert";
-import UserModel from "../model/User.model";
+import ElasticSearch from "./elasticsearch.util";
 const salt = 10
 const pageLimits = 5
 
@@ -51,7 +51,7 @@ export default class UserUtils{
                 switch(property){
                     case("FullName") :
                         await db.user
-                        .find({FullName:query}).lean()
+                        .findOne({FullName:query}).lean()
                         .then((result:any)=>{
                             resolve(result)
                         })    
@@ -242,6 +242,25 @@ export default class UserUtils{
                 }
                 
             } catch(err) {
+                reject(err)
+            }
+        })
+    }
+    static addToElasticsearch = async function (user:any) {
+        return new Promise(async(resolve,reject)=>{
+            try {
+                let result = await ElasticSearch.integrateIndex({
+                    _id:user._id.toString(),
+                    Username:user.Username,
+                    Point:user.Point,
+                    Email:user.Email,
+                    Payment:user.Payment,
+                    Password:user.Password,
+                    FullName:user.FullName,
+                    Role:user.Role,
+                },'user')
+                resolve(result)
+            }catch(err) {
                 reject(err)
             }
         })
