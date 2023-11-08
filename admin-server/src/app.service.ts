@@ -11,13 +11,13 @@ export class AppService {
     return new Promise(async(resolve,rejects)=>{
       try {
         let opt = randomUUID()
-        let result= await this.emailUtils.sendEmail(email,opt,'user service send opt')
+        let result= await this.emailUtils.sendEmail(email,opt,`${userName} send Opt`)
         resolve(result)
       } catch(err) {
         rejects(err)
       }
     })
-   
   }
+   
  
 }

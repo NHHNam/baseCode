@@ -1,18 +1,29 @@
 import { NestFactory } from '@nestjs/core';
-import { Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { Partitioners } from 'kafkajs';
 
 const logger = new Logger();
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice(AppModule, {
-    transport: Transport.TCP,
-    options: {
-      host: '127.0.0.1',
-      port: 8888,
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          brokers: ['localhost:9092'],
+        },
+        consumer: {
+          groupId: 'users-service',
+        },
+        producer: {
+          createPartitioner: Partitioners.LegacyPartitioner,
+        },
+      },
     },
-  });
-  app.listen().then(() => logger.log('Microservice A is listening'));
+  );
+  app.listen();
 }
 bootstrap();

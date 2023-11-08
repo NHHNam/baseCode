@@ -1,7 +1,6 @@
 import {google} from 'googleapis'
 import { OAuth2Client } from 'google-auth-library'
 import { Injectable} from '@nestjs/common';
-
 const nodemailer = require('nodemailer')
 require("dotenv").config()
 const client_id = process.env.client_id_google

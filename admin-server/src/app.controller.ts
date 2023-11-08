@@ -8,8 +8,9 @@ export class AppController {
   constructor(
     private readonly UserLoginService: AppService,
   ) {}
-  @MessagePattern({ cmd: 'sendOpt' })
+  @MessagePattern('users.sendOpt')
   async handleSenOpt(payload:any) {
+    console.log(payload)
     await this.UserLoginService.sendOpt(payload.email,payload.userName)
     return of('check email ').pipe(delay(1000));
   }
