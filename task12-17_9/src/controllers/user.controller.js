@@ -16,6 +16,12 @@ class UserController {
         res.json(token);
     }
 
+    async ElasticSearch(req, res) {
+        const { query } = req.query;
+        const result = await userService.elasticSearch(query);
+        return res.status(200).json(result);
+    }
+
     async ChangePassword(req, res) {
         const { _id } = req.payload;
         const { oldPassword, newPassword } = req.body;

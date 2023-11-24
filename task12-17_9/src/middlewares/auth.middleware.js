@@ -2,12 +2,13 @@ import JWT from 'jsonwebtoken';
 import User from '../models/user.model.js';
 
 export const verifyAdmin = (req, res, next) => {
-    const token = req.headers['authorization'].split(' ')[1];
-    if (!token) {
+    const bearerToken = req.headers['authorization'];
+    if (!bearerToken) {
         return res.status(401).json({
             message: 'Unauthorized',
         });
     }
+    const token = bearerToken.split(' ')[1];
     const keySecret = process.env.KEY_SECRET_TOKEN;
     JWT.verify(token, keySecret, async (err, payload) => {
         if (err) {
@@ -62,15 +63,13 @@ export const verifyRefreshToken = (refreshToken) => {
 };
 
 export const verifyUser = (req, res, next) => {
-    console.log(req.headers['authorization']);
-    const token = req.headers['authorization'].split(' ')[1];
-    console.log(token);
-    if (!token) {
+    const bearerToken = req.headers['authorization'];
+    if (!bearerToken) {
         return res.status(401).json({
             message: 'Unauthorized',
         });
     }
-
+    const token = bearerToken.split(' ')[1];
     JWT.verify(token, process.env.KEY_SECRET_TOKEN, async (err, payload) => {
         if (err) {
             return res.status(401).json({

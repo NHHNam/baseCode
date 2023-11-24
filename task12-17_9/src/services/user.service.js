@@ -4,6 +4,7 @@ import { signAccessToken, signOtpToken, signRefreshToken } from '../services/jwt
 import transporter from '../services/nodemailer.service.js';
 import { verifyRefreshToken } from '../middlewares/auth.middleware.js';
 import { Types } from 'mongoose';
+import { searchAsync } from './elasticsearch.service.js';
 
 export const create = async (user) => {
     try {
@@ -180,7 +181,14 @@ export const deleteRefreshToken = async (_id) => {
         throw new Error('Cannot use delete refresh token service');
     }
 };
-
+export const elasticSearch = async (query) => {
+    try {
+        const users = await User.find();
+        return await searchAsync('user', query, users);
+    } catch (error) {
+        throw error;
+    }
+};
 export const getAll = async (queryParams) => {
     try {
         const { search = null, page = 1 } = queryParams;

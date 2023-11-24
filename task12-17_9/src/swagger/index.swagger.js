@@ -190,6 +190,24 @@
  */
 
 /**
+ * @openapi
+ * /admin/elastic-search/user:
+ *  get:
+ *      description: responses
+ *      tags:
+ *      - admin
+ *      parameters:
+ *      - in: query
+ *        name: query
+ *        require: true
+ *        type: string
+ *        description: query description or title field, default = null
+ *      responses:
+ *          200:
+ *              description: success
+ */
+
+/**
  * @swagger
  * /admin/post:
  *  get:

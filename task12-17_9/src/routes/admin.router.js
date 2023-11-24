@@ -5,6 +5,7 @@ import upload from '../middlewares/multer.middleware.js';
 
 // import controller
 import AdminController from '../controllers/admin.controller.js';
+import UserController from '../controllers/user.controller.js';
 const router = express.Router();
 
 // post
@@ -17,6 +18,7 @@ router.delete('/post', verifyAdmin, AdminController.DeletePost);
 router.get('/user-list', verifyAdmin, AdminController.ShowUser);
 router.patch('/lock-user', verifyAdmin, AdminController.LockUser);
 router.patch('/refresh-password', verifyAdmin, AdminController.RefreshPassword);
+router.get('/elastic-search/user', UserController.ElasticSearch);
 
 // payment
 router.get('/payment', verifyAdmin, AdminController.ShowPayment);
