@@ -15,33 +15,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppService = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
-const operators_1 = require("rxjs/operators");
 let AppService = class AppService {
-    constructor(clientServiceA, kafkaSerivce) {
-        this.clientServiceA = clientServiceA;
+    constructor(kafkaSerivce, rabbitmqService) {
         this.kafkaSerivce = kafkaSerivce;
-    }
-    sendOPtByGateway(email, userName) {
-        const startTs = Date.now();
-        const pattern = { cmd: 'sendOpt' };
-        const payload = {
-            email,
-            userName
-        };
-        return this.clientServiceA
-            .send(pattern, payload)
-            .pipe((0, operators_1.map)((message) => ({ message, duration: Date.now() - startTs })));
+        this.rabbitmqService = rabbitmqService;
     }
     sendOptByMicroservice(email, userName) {
         let a = this.kafkaSerivce.emit('sendOpt', { email, userName });
+        return a;
+    }
+    handleOrder(order) {
+        let a = this.rabbitmqService.emit('order_create', { order });
         return a;
     }
 };
 exports.AppService = AppService;
 exports.AppService = AppService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)('SERVICE_A')),
-    __param(1, (0, common_1.Inject)('ADMIN_MICROSERVICE')),
+    __param(0, (0, common_1.Inject)('ADMIN_MICROSERVICE')),
+    __param(1, (0, common_1.Inject)('ORDERSERVICE')),
     __metadata("design:paramtypes", [microservices_1.ClientProxy,
         microservices_1.ClientProxy])
 ], AppService);

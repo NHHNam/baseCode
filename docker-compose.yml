@@ -13,81 +13,80 @@ networks:
             kafka: 10.5.0.2
             zookeeper: 10.5.0.3
 services:
-  microservice:
-    container_name: microservice
-    build: ./microservice
-    volumes:
-      - ./aiking/server:/usr/src/app  
-      - /usr/src/app/node_modules
-    ports:
-      - "8080:8080"
-    environment:
-      hostRedis: 127.0.0.1
-      portRedis: 6379
-  admin-server:
-    container_name: admin-server
-    build: ./admin-server
-    volumes:
-      - ./aiking/server:/usr/src/app  
-      - /usr/src/app/node_modules
-    ports:
-      - "9090:9090"
-    environment:
-      hostRedis: 127.0.0.1
-      portRedis: 6379
+  # microservice:
+  #   container_name: microservice
+  #   build: ./microservice
+  #   volumes:
+  #     - ./aiking/server:/usr/src/app  
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     hostRedis: 127.0.0.1
+  #     portRedis: 6379
+  # admin-server:
+  #   container_name: admin-server
+  #   build: ./admin-server
+  #   volumes:
+  #     - ./aiking/server:/usr/src/app  
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - "9090:9090"
+  #   environment:
+  #     hostRedis: 127.0.0.1
+  #     portRedis: 6379
   mongodb:
         image : mongo:latest
         container_name: mongodb
         environment:
-        - MONGO_INITDB_ROOT_PASSWORD= root
-        - MONGO_INITDB_ROOT_USERNAME= root
+        - MONGODB_DATABASE= "aiking"
         volumes:
         - ./mongodb:/data/db
         ports:
         - 27017:27017
         restart: unless-stopped
-  zookeeper:
-        image: 'bitnami/zookeeper:latest'
-        container_name: "zookeeper"
-        ports:
-        - 2181:2181
-        # volumes:
-        # - ./zookeeper:/var/lib/zookeeper
-        networks:
-        - "ev"
-        environment:
-        - ALLOW_ANONYMOUS_LOGIN=yes
-  kafka:
-        image: bitnami/kafka:latest
-        container_name: "kafka"
-        ports:
-            - 9092:9092
-        networks:
-        - "ev"
-        # volumes:
-        # - ./kafka:/opt/bitnami/kafka
-        restart: unless-stopped
-        depends_on:
-        - zookeeper
-        environment:
-        - KAFKA_BROKER_ID=1
-        - KAFKA_LISTENERS=PLAINTEXT://:9092
-        - ALLOW_PLAINTEXT_LISTENER=yes
-        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-        - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-        - KAFKA_RESTART_ATTEMPTS=10
-        - KAFKA_RESTART_DELAY=5
-        - ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL=0
-        # - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-  redis:
-        image: redis:3
-        restart: always
-        container_name: "redis"
-        ports:
-        - 6379:6379
-        environment:
-        - ALLOW_EMPTY_PASSWORD=yes
-        volumes: 
-        - ./redis:/data
-        networks:
-        - "ev"
+  # zookeeper:
+  #       image: 'bitnami/zookeeper:latest'
+  #       container_name: "zookeeper"
+  #       ports:
+  #       - 2181:2181
+  #       # volumes:
+  #       # - ./zookeeper:/var/lib/zookeeper
+  #       networks:
+  #       - "ev"
+  #       environment:
+  #       - ALLOW_ANONYMOUS_LOGIN=yes
+  # kafka:
+  #       image: bitnami/kafka:latest
+  #       container_name: "kafka"
+  #       ports:
+  #           - 9092:9092
+  #       networks:
+  #       - "ev"
+  #       # volumes:
+  #       # - ./kafka:/opt/bitnami/kafka
+  #       restart: unless-stopped
+  #       depends_on:
+  #       - zookeeper
+  #       environment:
+  #       - KAFKA_BROKER_ID=1
+  #       - KAFKA_LISTENERS=PLAINTEXT://:9092
+  #       - ALLOW_PLAINTEXT_LISTENER=yes
+  #       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+  #       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+  #       - KAFKA_RESTART_ATTEMPTS=10
+  #       - KAFKA_RESTART_DELAY=5
+  #       - ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL=0
+  #       # - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+  # redis:
+  #       image: redis:3
+  #       restart: always
+  #       container_name: "redis"
+  #       ports:
+  #       - 6379:6379
+  #       environment:
+  #       - ALLOW_EMPTY_PASSWORD=yes
+  #       volumes: 
+  #       - ./redis:/data
+  #       networks:
+  #       - "ev"

@@ -1,5 +1,5 @@
 import { Controller, Param } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { EventPattern, MessagePattern } from '@nestjs/microservices';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { AppService } from './app.service';
@@ -8,10 +8,11 @@ export class AppController {
   constructor(
     private readonly UserLoginService: AppService,
   ) {}
-  @MessagePattern('users.sendOpt')
+  @EventPattern('email_send')
   async handleSenOpt(payload:any) {
+    console.log("send email")
+    await this.UserLoginService.sendOpt(payload.email,payload.username)
     console.log(payload)
-    await this.UserLoginService.sendOpt(payload.email,payload.userName)
-    return of('check email ').pipe(delay(1000));
+    return payload
   }
 }

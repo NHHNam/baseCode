@@ -17,14 +17,19 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            microservices_1.ClientsModule.register([
+            microservices_1.ClientsModule.registerAsync([
                 {
-                    name: 'SERVICE_A',
-                    transport: microservices_1.Transport.TCP,
-                    options: {
-                        host: '127.0.0.1',
-                        port: 8888,
-                    },
+                    name: 'ORDERSERVICE',
+                    useFactory: () => ({
+                        transport: microservices_1.Transport.RMQ,
+                        options: {
+                            urls: ['amqp://localhost:5672'],
+                            queue: 'order_queue',
+                            queueOptions: {
+                                durable: false,
+                            },
+                        },
+                    }),
                 },
             ]),
             microservices_1.ClientsModule.register([

@@ -16,28 +16,22 @@ exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
 const decorators_1 = require("@nestjs/common/decorators");
+const OrderDto_1 = require("./Order/OrderDto");
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
-    }
-    sendEmailByAdminServer(email, userName) {
-        return this.appService.sendOPtByGateway(email, userName);
     }
     sendEmailByMicroservice(email, userName) {
         let a = this.appService.sendOptByMicroservice(email, userName);
         console.log(a);
         return a;
     }
+    handleCreateOrder(order) {
+        this.appService.handleOrder(order);
+        return 'check mail';
+    }
 };
 exports.AppController = AppController;
-__decorate([
-    (0, common_1.Get)('/userService/:email/:userName'),
-    __param(0, (0, decorators_1.Param)('email')),
-    __param(1, (0, decorators_1.Param)('userName')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", void 0)
-], AppController.prototype, "sendEmailByAdminServer", null);
 __decorate([
     (0, common_1.Get)('/kafka/:email/:userName'),
     __param(0, (0, decorators_1.Param)('email')),
@@ -46,6 +40,13 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "sendEmailByMicroservice", null);
+__decorate([
+    (0, common_1.Get)('/rabbitmq'),
+    __param(0, (0, decorators_1.Body)('order')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [OrderDto_1.OrderDto]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "handleCreateOrder", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

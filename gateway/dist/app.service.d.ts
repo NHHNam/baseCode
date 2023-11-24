@@ -1,11 +1,9 @@
 import { ClientProxy } from '@nestjs/microservices';
+import { OrderDto } from './Order/OrderDto';
 export declare class AppService {
-    private readonly clientServiceA;
     private readonly kafkaSerivce;
-    constructor(clientServiceA: ClientProxy, kafkaSerivce: ClientProxy);
-    sendOPtByGateway(email: string, userName: string): import("rxjs").Observable<{
-        message: string;
-        duration: number;
-    }>;
+    private readonly rabbitmqService;
+    constructor(kafkaSerivce: ClientProxy, rabbitmqService: ClientProxy);
     sendOptByMicroservice(email: string, userName: string): import("rxjs").Observable<any>;
+    handleOrder(order: OrderDto): import("rxjs").Observable<any>;
 }
