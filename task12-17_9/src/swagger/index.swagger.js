@@ -560,3 +560,57 @@
  *       '200':
  *         description: Kết quả tìm kiếm thành công
  */
+
+// /**
+//  * @swagger
+//  * /order:
+//  *   post:
+//  *     tags:
+//  *     - rabbitmq
+//  *      requestBody:
+//  *          required: true
+//  *          content:
+//  *           application/json:
+//  *              schema:
+//  *                type: object
+//  *                properties:
+//  *                  userId:
+//  *                    type: string
+//  *                  products:
+//  *                    type: string
+//  *                  total:
+//  *                     type: number
+//  *                  status:
+//  *                     type: string
+//  *     responses:
+//  *       '200':
+//  *         description: Kết quả tìm kiếm thành công
+//  */
+
+/**
+ * @swagger
+ * /order:
+ *   post:
+ *     tags:
+ *     - rabbitmq
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               products:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               total:
+ *                 type: number
+ *               status:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Kết quả tìm kiếm thành công
+ */

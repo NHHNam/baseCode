@@ -6,7 +6,8 @@
     "type": "module",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon --inspect server.js"
+        "start": "nodemon --inspect server.js",
+        "start1": "nodemon --inspect server-rabbitmq.js"
     },
     "author": "",
     "license": "ISC",

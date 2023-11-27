@@ -9,7 +9,7 @@ amqp.connect('amqp://localhost:5672', function (error0, connection) {
         }
         var queue = 'task_queue';
         var msg = process.argv.slice(2).join(' ') || 'Fourth message....';
-
+        channel.assertExchange('logs', 'fanout', { durable: false });
         channel.assertQueue(queue, {
             durable: true,
         });

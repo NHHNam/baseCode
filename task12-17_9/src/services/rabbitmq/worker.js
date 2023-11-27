@@ -13,7 +13,8 @@ amqp.connect('amqp://localhost:5672', function (error0, connection) {
         channel.assertQueue(queue, {
             durable: true,
         });
-
+        channel.prefetch(1);
+        console.log(' [*] Waiting for messages in %s. To exit press CTRL+C', queue);
         channel.consume(
             queue,
             function (msg) {

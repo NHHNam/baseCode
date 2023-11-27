@@ -10,5 +10,6 @@ router.get('/chat-real-time-socket.io', verifyUser, SitesController.ChatRealTime
 router.post('/room', SitesController.Room);
 router.get('/view/login', SitesController.LoginView);
 router.get('/search/:index', SitesController.ElasticsearchPhrase);
+router.post('/order', SitesController.SendInfoToTelegramUsingRabbitmq);
 
 export default router;

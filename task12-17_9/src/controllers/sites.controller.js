@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 import User from '../models/user.model.js';
 import Message from '../models/message.model.js';
 import { search } from '../services/elasticsearch.service.js';
+import { SendInfo } from '../services/rabbitmq_telegram_order.service.js';
+import { createOrder } from '../services/order.service.js';
 
 import fs from 'fs';
 const __filename = fileURLToPath(import.meta.url);
@@ -76,6 +78,12 @@ class SitesController {
         const { query } = req.query;
         const data = await search(index, query);
         return res.json(data);
+    }
+
+    async SendInfoToTelegramUsingRabbitmq(req, res) {
+        await createOrder(req.body);
+        SendInfo('logs_order', req.body);
+        res.status(200).json('Order is created');
     }
 }
 export { roomIdGlobal };

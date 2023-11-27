@@ -1,20 +1,15 @@
-import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
 
 import * as userService from './user.service.js';
 import * as paymentService from './payment.service.js';
 import * as postService from './post.service.js';
+import bot from '../config/bot-telegram.config.js';
 
 dotenv.config();
 
-const token = process.env.TELEGRAM_BOT_TOKEN;
-
-const bot = new TelegramBot(token, { polling: true });
-
 const CallBotTelegram = () => {
     bot.on('message', async (msg) => {
-        console.log(msg);
-
+        console.log(msg.chat.id);
         const parts = msg.text.toString().split(';');
         if (parts.length > 0) {
             const command = parts[0].trim().split('_')[0];
