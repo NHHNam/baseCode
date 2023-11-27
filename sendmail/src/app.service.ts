@@ -18,4 +18,17 @@ export class AppService {
       throw new HttpException(err, 500);
     }
   }
+  async sendMail(payload: any) {
+    try {
+      let { username, email } = payload;
+      await this.mailerService.sendMail({
+        to: `${email}`,
+        subject: 'Send Notification',
+        html: `<b>Khách hàng ${username} đã order thành công</b>`,
+      });
+      return `Send mail to ${username} success`;
+    } catch (err) {
+      throw new HttpException(err, 500);
+    }
+  }
 }

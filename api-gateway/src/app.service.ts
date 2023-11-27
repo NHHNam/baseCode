@@ -1,10 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientKafka, ClientProxy } from '@nestjs/microservices';
+import { createOrderDto } from './order/orderDto';
 
 @Injectable()
 export class AppService {
   constructor(
     @Inject('USER_SERVICE') private readonly usersService: ClientKafka,
+    @Inject('ORDER_SERVICE') private readonly orderService: ClientProxy,
   ) {}
   async onApplicationShutdown() {
     await this.usersService.close();
@@ -26,5 +28,9 @@ export class AppService {
         reject(err);
       }
     });
+  }
+
+  createOrder(body: createOrderDto) {
+    return this.orderService.send('create_order', body);
   }
 }

@@ -9,4 +9,10 @@ export class AppController {
   handleSendOtp(@Payload() payload: any) {
     return this.appService.sendOtp(payload);
   }
+  @MessagePattern('send_mail')
+  async sendMail(@Payload() payload: any) {
+    console.log(payload);
+    console.log('check mail di');
+    return await this.appService.sendMail(payload);
+  }
 }

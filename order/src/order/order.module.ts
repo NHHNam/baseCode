@@ -1,20 +1,21 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { KafkaModule } from './kafka/kafka.module';
+import { OrderService } from './order.service';
+import { OrderController } from './order.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import Order from './entities/order.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
-    KafkaModule,
+    TypeOrmModule.forFeature([Order]),
     ClientsModule.registerAsync([
       {
-        name: 'ORDER_SERVICE',
+        name: 'SENDMAIL_SERVICE',
         useFactory: () => ({
           transport: Transport.RMQ,
           options: {
             urls: ['amqp://localhost:5672'],
-            queue: 'order',
+            queue: 'sendmail',
             queueOptions: {
               durable: false,
             },
@@ -23,7 +24,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       },
     ]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  exports: [ClientsModule],
+  controllers: [OrderController],
+  providers: [OrderService],
 })
-export class AppModule {}
+export class OrderModule {}

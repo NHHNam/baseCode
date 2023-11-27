@@ -1,22 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { Partitioners } from 'kafkajs';
-
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
-      transport: Transport.KAFKA,
+      transport: Transport.RMQ,
       options: {
-        client: {
-          brokers: ['localhost:9092'],
-        },
-        consumer: {
-          groupId: 'user-consumer',
-        },
-        producer: {
-          createPartitioner: Partitioners.LegacyPartitioner,
+        urls: ['amqp://localhost:5672'],
+        queue: 'sendmail',
+        queueOptions: {
+          durable: false,
         },
       },
     },
