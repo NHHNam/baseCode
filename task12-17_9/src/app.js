@@ -77,6 +77,12 @@ const options = {
 const specs = swaggerJsDoc(options);
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(specs));
 
+// // err
+// app.use(function (err, req, res, next) {
+//     console.error(err.stack);
+//     res.status(500).send('Something broke!');
+// });
+
 // connect to mongoose
 connectMongoose();
 

@@ -106,7 +106,7 @@
  */
 
 /**
- * @swagger
+ * @openapi
  * /user/payment:
  *  post:
  *      description: responses

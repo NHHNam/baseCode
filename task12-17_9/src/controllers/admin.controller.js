@@ -60,6 +60,7 @@ class AdminController {
     }
 
     async AddPayment(req, res) {
+        console.log(req.body);
         const { _id } = req.payload;
         const { userId, ...paymentField } = req.body;
         const id = userId || _id;

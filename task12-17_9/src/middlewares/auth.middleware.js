@@ -2,6 +2,7 @@ import JWT from 'jsonwebtoken';
 import User from '../models/user.model.js';
 
 export const verifyAdmin = (req, res, next) => {
+    console.log(req.headers['authorization']);
     const bearerToken = req.headers['authorization'];
     if (!bearerToken) {
         return res.status(401).json({
@@ -90,7 +91,7 @@ export const verifyUser = (req, res, next) => {
             });
         }
         req.payload = payload;
-        next();
+        return next();
     });
 };
 

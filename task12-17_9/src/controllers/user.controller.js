@@ -1,5 +1,7 @@
 import * as userService from '../services/user.service.js';
 import * as paymentService from '../services/payment.service.js';
+import userModel from '../models/user.model.js';
+import paymentModel from '../models/payment.model.js';
 
 class UserController {
     async Register(req, res, next) {
@@ -80,6 +82,7 @@ class UserController {
     }
 
     async AddPayment(req, res, next) {
+        console.log(456);
         const { _id: userId } = req.payload;
         await paymentService.create(userId, req.body);
         return res.status(200).json({
@@ -97,11 +100,30 @@ class UserController {
 
     async AtmTransaction(req, res) {
         const { _id: fromUserId } = req.payload;
-        const { toUserId, amount } = req.body;
-        await paymentService.atmTransaction(fromUserId, toUserId, amount);
+        const userFrom = await userModel.findById(fromUserId);
+        const { toUsername, amount } = req.body;
+        const userTo = await userModel.findOne({ userName: toUsername });
+        console.log(userFrom);
+        console.log(userTo);
+
+        await paymentService.atmTransaction(userFrom.payment.toString(), userTo.payment.toString(), amount);
         return res.status(200).json({
             message: 'Transfer is Ok',
         });
+    }
+
+    async GetPayment(req, res) {
+        try {
+            const { _id: userId } = req.payload;
+            const user = await userModel.findById(userId);
+            const paymentId = user.payment;
+            if (!paymentId) throw new Error('User không có payment');
+            console.log(paymentId);
+            const payment = await paymentModel.findById(paymentId);
+            return res.json(payment);
+        } catch (error) {
+            throw error;
+        }
     }
 }
 

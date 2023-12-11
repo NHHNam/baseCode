@@ -1,6 +1,6 @@
 import User from '../models/user.model.js';
 import Payment from '../models/payment.model.js';
-import { startSession, Types } from 'mongoose';
+import { Error, startSession, Types } from 'mongoose';
 
 export const create = async (userId, field) => {
     try {
@@ -17,7 +17,8 @@ export const create = async (userId, field) => {
         const newPayment = new Payment({ ...field, userId });
         const savePayment = await newPayment.save();
 
-        const paymentId = savePayment.userId;
+        const paymentId = savePayment._id;
+
         await User.findByIdAndUpdate(userId, { payment: paymentId });
     } catch (error) {
         console.log(error);
@@ -49,41 +50,37 @@ export const update = async (userId, field) => {
     }
 };
 
-export const atmTransaction = async (fromUserId, toUserId, amount) => {
+export const atmTransaction = async (paymentFromId, paymentToId, amount) => {
     const session = await startSession();
+    session.startTransaction();
     try {
-        if (!Types.ObjectId.isValid(toUserId)) {
+        if (!Types.ObjectId.isValid(paymentFromId) || !Types.ObjectId.isValid(paymentToId)) {
             throw new Error('Invalid id format');
         }
-        const userFrom = await User.findById(fromUserId);
-        if (!userFrom.payment) {
-            throw new Error("User haven't payment yet");
-        }
-        const paymentFrom = userFrom.payment;
+        const paymentFrom = await Payment.findById(paymentFromId);
+        const paymentTo = await Payment.findById(paymentToId);
 
-        const userTo = await User.findById(toUserId);
-        if (!userTo.payment) {
-            throw new Error("User haven't payment yet");
+        if (!paymentFrom || !paymentTo) {
+            throw new Error('Payment is not found');
         }
-        const paymentTo = userTo.payment;
+        if (paymentFrom.amount < amount) throw new Error('User không đủ tiền để chuyển');
 
-        session.startTransaction();
         const amountFrom = await Payment.findByIdAndUpdate(
-            paymentFrom,
+            paymentFromId,
             {
                 $inc: { amount: -amount },
             },
             { session, new: true },
         );
-        console.log(`fromId ${fromUserId}: ${amountFrom}`);
 
         const amountTo = await Payment.findByIdAndUpdate(
-            paymentTo,
+            paymentToId,
             {
                 $inc: { amount: amount },
             },
             { session, new: true },
         );
+        console.log(amountFrom, amountTo);
         await session.commitTransaction();
     } catch (error) {
         await session.abortTransaction();
